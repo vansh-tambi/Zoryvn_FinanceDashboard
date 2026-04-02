@@ -10,7 +10,7 @@ Most dashboards show you numbers. FinSight shows you patterns.
 
 ## Live Demo
 
-> Add your deployment link here (Vercel / Netlify)
+(https://zoryvn-finance-dashboard.vercel.app/)
 
 ---
 
