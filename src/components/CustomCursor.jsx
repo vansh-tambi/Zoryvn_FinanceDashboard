@@ -18,6 +18,7 @@ const CustomCursor = () => {
 
     // 'default' = bare page | 'content' = any card/text/row | 'interactive' = button/link | 'amount' = numbers
     const [state, setState] = useState('default');
+    const [clicked, setClicked] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
@@ -58,6 +59,9 @@ const CustomCursor = () => {
             }
         };
 
+        const onMouseDown = () => setClicked(true);
+        const onMouseUp = () => setClicked(false);
+
         const lerp = (a, b, t) => a + (b - a) * t;
 
         const animate = () => {
@@ -72,32 +76,36 @@ const CustomCursor = () => {
         };
 
         window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('mousedown', onMouseDown);
+        window.addEventListener('mouseup', onMouseUp);
         rafRef.current = requestAnimationFrame(animate);
 
         return () => {
             window.removeEventListener('mousemove', onMouseMove);
+            window.removeEventListener('mousedown', onMouseDown);
+            window.removeEventListener('mouseup', onMouseUp);
             if (rafRef.current) cancelAnimationFrame(rafRef.current);
         };
     }, [isMobile]);
 
-    // Ring size per state
-    const ringSize = (state === 'interactive' || state === 'content') ? 50 : state === 'amount' ? 28 : 32;
+    // Ring size per state - now only enlarges on click
+    const ringSize = clicked ? 46 : state === 'amount' ? 28 : 32;
 
     const dotGlowColor = state === 'default' ? 'none' : '0 0 10px #00D9A3, 0 0 20px rgba(0,217,163,0.4)';
     const dotColor = state === 'default' ? '#ffffff' : '#00D9A3';
     const dotSize = state === 'amount' ? '0px' : '7px';
 
-    const ringBorder = (state === 'interactive' || state === 'content')
+    const ringBorder = clicked 
         ? '1.5px solid #00D9A3'
         : state === 'amount'
         ? '1.5px solid #00D9A3'
         : '1px solid rgba(0,217,163,0.4)';
 
-    const ringBg = (state === 'interactive' || state === 'content')
-        ? 'rgba(0,217,163,0.055)'
+    const ringBg = clicked
+        ? 'rgba(0,217,163,0.08)'
         : 'transparent';
 
-    const ringGlow = (state === 'interactive' || state === 'content')
+    const ringGlow = clicked
         ? '0 0 16px rgba(0,217,163,0.28), inset 0 0 8px rgba(0,217,163,0.07)'
         : 'none';
 

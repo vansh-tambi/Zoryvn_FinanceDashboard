@@ -41,6 +41,26 @@ export const useFinanceStore = create(
           )
         })),
 
+      deleteTransaction: (id) =>
+        set((state) => ({
+          transactions: state.transactions.filter(t => t.id !== id),
+          toast: { message: 'Transaction deleted.', type: 'success', id: Date.now() }
+        })),
+        
+      deleteMultipleTransactions: (ids) =>
+        set((state) => ({
+          transactions: state.transactions.filter(t => !ids.includes(t.id)),
+          toast: { message: `${ids.length} transactions deleted.`, type: 'success', id: Date.now() }
+        })),
+
+      editMultipleTransactions: (ids, updatedDetails) =>
+        set((state) => ({
+          transactions: state.transactions.map((t) => 
+            ids.includes(t.id) ? { ...t, ...updatedDetails } : t
+          ),
+          toast: { message: `${ids.length} transactions updated.`, type: 'success', id: Date.now() }
+        })),
+
       // Computed metrics (preserving legacy helpers)
       getMetrics: () => {
         const txns = get().transactions;

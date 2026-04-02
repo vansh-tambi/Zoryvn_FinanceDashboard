@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Receipt, LineChart, Shield } from 'lucide-react';
+import { LayoutDashboard, Receipt, LineChart, Shield, UserCircle } from 'lucide-react';
+import { useFinanceStore } from '../store/useFinanceStore';
 import StreakCard from './StreakCard';
 
 import { motion, useReducedMotion } from 'framer-motion';
@@ -39,6 +40,8 @@ const NavItem = ({ item }) => {
 };
 
 const Sidebar = () => {
+  const { role, setRole } = useFinanceStore();
+  
   const navItems = [
     { label: 'Overview', path: '/', icon: <LayoutDashboard size={20} /> },
     { label: 'Transactions', path: '/transactions', icon: <Receipt size={20} /> },
@@ -63,7 +66,26 @@ const Sidebar = () => {
           ))}
         </nav>
 
-        <div className="px-3 pb-4"><StreakCard /></div>
+        <div className="px-3 pb-4">
+            <button 
+                onClick={() => setRole(role === 'admin' ? 'viewer' : 'admin')}
+                className="w-full flex items-center justify-between p-3 rounded-xl bg-[#0a1628] border border-[#1e2d45] hover:border-teal-500/50 transition-colors mb-3 group"
+            >
+                <div className="flex items-center gap-2 text-slate-300 group-hover:text-white">
+                    <UserCircle size={16} />
+                    <span className="text-xs font-semibold">{role === 'admin' ? 'Admin Mode' : 'Viewer Mode'}</span>
+                </div>
+                <div className={`w-8 h-4 rounded-full flex items-center p-0.5 transition-colors ${role === 'admin' ? 'bg-teal-500' : 'bg-slate-600'}`}>
+                    <div className={`w-3 h-3 bg-[#030712] rounded-full shadow-sm transition-transform ${role === 'admin' ? 'translate-x-4' : 'translate-x-0'}`} />
+                </div>
+            </button>
+            {role === 'admin' && (
+                <NavLink to="/admin" className="w-full flex items-center justify-center p-2.5 rounded-xl bg-teal-500 text-[#030712] font-bold text-sm hover:brightness-110 mb-4 shadow-[0_4px_15px_rgba(20,184,166,0.2)] transition-all">
+                    Go to Admin Panel
+                </NavLink>
+            )}
+            <StreakCard />
+        </div>
       </div>
 
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0D1117]/95 backdrop-blur-md border-t border-[#1C2333] px-2 flex justify-around items-center h-[72px] pb-safe">

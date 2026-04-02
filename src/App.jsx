@@ -4,6 +4,7 @@ import AppLayout from './components/AppLayout';
 import Dashboard from './components/Dashboard';
 import TransactionsPage from './pages/TransactionsPage';
 import InsightsPage from './pages/InsightsPage';
+import AdminPanel from './pages/AdminPanel';
 import CustomCursor from './components/CustomCursor';
 import './index.css';
 
@@ -36,6 +37,7 @@ function App() {
             <Route path="transactions" element={<TransactionsPage />} />
             <Route path="insights" element={<InsightsPage />} />
           </Route>
+          <Route path="/admin" element={<AdminPanel />} />
         </Routes>
       </BrowserRouter>
     </>
