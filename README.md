@@ -1,79 +1,168 @@
-# Zoryvn Finance Dashboard ✦
+# FinSight — Personal Finance Dashboard
 
-A highly premium, deeply interactive, and visually stunning personal finance tracking application. Engineered natively with **React** and **Vite**, Zoryvn abandons generic layouts for a bespoke, glassmorphic `#030712` dark-mode aesthetic with human-centric design.
+> Built for the Zoryvn Frontend Intern Assignment · React + Vite · April 2026
 
-The dashboard isn't just a ledger — it's a predictive analytics engine powered by mathematically dense derivations, robust edge-casing, and a world-class micro-animation physics system built to react to every user interaction naturally.
+A behavior-aware finance dashboard that tells you what your money is doing — not just how much of it is gone.
 
----
-
-## ✨ Exhaustive Feature Overview
-
-### 🎨 State-of-the-Art Aesthetic & Typography
-- **Strict Typographic Hierarchy**: Every UI label, description, and copy element runs on **Sora** (`uppercase`, wide-tracking for labels). Every single financial amount and data point runs on **DM Mono** (`tabular-nums`) natively aligning numbers perfectly across all lists and charts.
-- **Subconscious Tactile Noise Texture**: A global fixed procedural SVG `<feTurbulence>` filter coats the entire application at `3%` opacity, destroying the generic "digital flat" feel and rendering the dashboard with a physical, grain-like tactility.
-- **Bespoke Recharts Overrides**: Recharts' default structures are fully dismantled. Floating custom dark-card tooltips feature `#0d1f3c` backgrounds, precise DM Mono readouts, explicit color-dot mapping, and soft `0 4px 20px #00000060` shadows perfectly matching the global interface layer.
-- **Humanized UI Text**: We audited every single string in the interface. Away with "Transaction Added Successfully" — in with *"Got it — transaction saved."* System prompts are replaced with specific, opinionated human language (e.g., *"Technically perfect — but start tracking outflows and we'll show you where things actually go"*).
-
-### 🕹️ World-Class Micro-Interaction Physics
-- **4-State Spring Custom Cursor**: The native cursor is dead. We implemented an absolute physics-based cursor running via `requestAnimationFrame` and linear interpolation (`lerp`). The cursor intelligently identifies 4 distinct DOM states:
-  - `Default`: Precise 32px contrasting ring.
-  - `Content`: Enlarges to 50px teal ring across all cards and text.
-  - `Interactive`: Spin animations lock onto native buttons & links.
-  - `Data`: Snaps into a 28px crosshair over raw `.font-mono` numbers.
-- **Zero Native Scrollbars**: Seamless `cursor: none !important` coverage with forced `::-webkit-scrollbar { display: none; }` means the custom tracker never breaks, even while scrubbing through overflow tracks.
-- **Native Easing & Spring Physics**: Explicit tracking mechanics enforcing CSS defaults into dynamic Framer hooks (`stiffness: 200`/`damping: 20` native mousedown springs mapped seamlessly).
-- **Scale Bounding & Stagger Loops**: Render arrays intelligently initiate sequentially staggered lists capped to prevent load lag, throwing cascading origin boundaries masking standard `<div/>` layouts seamlessly.
-
-### 🧠 Deep Analytics & Intelligence Engine
-- **Financial Health Scoring Engine**: Computes a dynamic 100-point grade recursively weighing your active Savings Ratio (40%), Standard Deviation structural consistency (30%), and individual Category concentration limits (30%).
-- **Actionable AI-like Insights**: Flags distinct spending vulnerabilities — predicting duplicate active subscriptions, targeting sub-20% savings gaps, and suggesting realistic constraint drops.
-- **Suspicious Pattern Mapping**: Built-in array aggregators detect anomalous bursts grouped natively by aggressive 48-hour arrays, unusual single expenditures, and localized time-of-day behavioral clusters.
-- **Algorithmic Personality Tagging**: Assigns dynamic spending personas (e.g. *Night Owl Shopper*, *Weekend Warrior*, *Foodie*) based directly on your precise transaction footprint.
-
-### 🛡️ Robust State & Absolute Edge Casing
-- **Absolute 0-Transaction Overrides**: Highly-stylized, hand-crafted SVG Empty States (like the minimal line-art sad wallet) dynamically capture and guide users when no metrics exist.
-- **"100% Savings" Pure-Income Checks**: Intelligently overrides Insights tables directly preventing division faults whenever localized users cast Income without touching absolute Outbound channels.
-- **Live Local Storage Persistence**: Handled locally via `localStorage` arrays mounted onto the `Zustand` global cache parsing live DOM boundaries immediately shifting charts visually on edit.
+Most dashboards show you numbers. FinSight shows you patterns.
 
 ---
 
-## 🚀 Technical Stack
+## Live Demo
 
-- **Core Framework**: [React 18](https://react.dev/) bundled via [Vite](https://vitejs.dev/)
-- **Aesthetic Boundaries**: [Tailwind CSS v4](https://tailwindcss.com/) (Deep `#030712` slate palettes & Custom glassmorphic borders)
-- **State Management**: [Zustand](https://github.com/pmndrs/zustand)
-- **Animation Physics**: [Framer Motion](https://www.framer.com/motion/)
-- **Data Plotting**: [Recharts](https://recharts.org/)
-- **Vector Iconography**: [Lucide React](https://lucide.dev/)
-- **Master Typography**: [Fontsource Sora](https://fontsource.org/fonts/sora) & [Fontsource DM Mono](https://fontsource.org/fonts/dm-mono)
+> Add your deployment link here (Vercel / Netlify)
 
 ---
 
-## 📁 System Architecture
+## Problem
 
-```text
+Standard finance tools dump raw transaction data on you and call it insight. Users don't relate to bar charts — they relate to "you ordered food 9 times in 48 hours." This project bridges that gap.
+
+---
+
+## What I Built
+
+### Dashboard Overview
+- 4 animated summary cards — Balance, Income, Expenses, Savings Rate
+- Numbers count up from zero on load via Framer Motion springs
+- Balance trend (3-month area chart with teal gradient)
+- Spending breakdown by category (donut chart, hover to expand)
+
+### Transactions
+- Full transaction list with date, amount, category, type
+- Search by title, filter by category/type, sort by date or amount
+- 800ms skeleton loaders on initial render
+- Meaningful empty states when filters return nothing
+- **Admin only:** Add transaction via slide-up modal
+
+### Insights Engine
+- **Personality tags** — derived from behavior (e.g. "Weekend Warrior", "Late Night Spender")
+- **Suspicious activity detection** — flags burst spending, duplicate subscriptions, unusual spikes
+- **Actionable suggestions** — "Cut food orders by 20% → save ₹2,000/month"
+- **Monthly comparison** — 3-month bar chart by category
+- **Category ranking** — animated horizontal progress bars
+
+### Financial Health Score
+Score out of 100, computed from three sub-metrics:
+- Savings rate (40 pts)
+- Spending consistency — standard deviation of monthly expenses (30 pts)
+- Category balance — penalizes if one category > 60% of total (30 pts)
+
+### Role-Based UI
+| Feature | Viewer | Admin |
+|---|---|---|
+| View dashboard | ✓ | ✓ |
+| View transactions | ✓ | ✓ |
+| View insights | ✓ | ✓ |
+| Add transaction | ✗ | ✓ |
+| Admin panel | ✗ | ✓ |
+
+Switch roles via the toggle in the sidebar. Role persists across sessions.
+
+### Admin Panel
+A dedicated management view (Admin only):
+- Full transaction table with edit, delete, bulk actions
+- Inline delete confirmation (no accidental deletions)
+- Status labels — Verified, Flagged, Duplicate, Normal
+- Export transactions as CSV
+- Filters + pagination (10 rows per page)
+
+---
+
+## Why These Tech Choices
+
+| Tool | Why |
+|---|---|
+| **Zustand** | 55 lines to manage all global state vs 400+ with Redux. No boilerplate. |
+| **Recharts** | Lightweight, animates cleanly, no D3 overhead for this scope. |
+| **Framer Motion** | `AnimatePresence` handles modal exit animations properly — CSS alone can't. |
+| **DM Mono** | Monospace font for all numbers — makes financial data feel precise and scannable. |
+| **localStorage persist** | Zero backend requirement, data survives refreshes, offline-ready. |
+
+---
+
+## Key Design Decisions
+
+**Behavior over data.** The insights page classifies *how* you spend, not just *what* you spent. Personality tags and suspicious activity detection make patterns visible that raw numbers hide.
+
+**Derived, not hardcoded.** Every insight, tag, suggestion, and alert is computed from `derive.js` at runtime. Change the mock data — the entire insight layer updates automatically.
+
+**Role difference is obvious.** Viewer sees a `👁 Viewer mode` indicator on the dashboard itself. Admin gets a full panel. It's not just a hidden button.
+
+**Empty states have personality.** "Nothing matches those filters." not "No results found." Every system message sounds like a person wrote it.
+
+---
+
+## Tradeoffs
+
+- **Mock data instead of live API** — by design for this scope. The `derive.js` layer is backend-ready; swap `mockData.js` for an API call and nothing else changes.
+- **Client-side analytics** — works fine at this scale. At production scale, aggregations would move server-side.
+- **No auth system** — role is toggled in UI, not authenticated. A real RBAC system would verify role via JWT claims.
+
+---
+
+## Project Structure
+
+```
 src/
-├── components/          # Scalable interactive UI mounts (CategoryPieChart, SummaryCards, CustomCursor)
-├── data/                # Mock array schemas loaded with highly-realistic, human-sounding UPI data
-├── pages/               # Primary layout instances (Overview, Transactions, Insights)
-├── store/               # Zustand hooks orchestrating persistence loops and active filters
-├── utils/               # Intensive analytical derivation formulas (`derive.js`)
-├── AppLayout.jsx        # Root layout parsing explicit Framer navigation paths & toast portals
-└── index.css            # Global visual resets (Scrollbar obliteration, strict cursor defaults)
+├── components/
+│   ├── layout/          Sidebar, Topbar, RoleToggle
+│   ├── dashboard/       SummaryCards, BalanceTrendChart, SpendingBreakdown
+│   ├── transactions/    TransactionList, FilterBar, AddTransactionModal
+│   ├── insights/        StoryCards, SuspiciousAlerts, PersonalityCard, HealthScore
+│   ├── admin/           AdminPanel, TransactionTable, EditModal
+│   └── ui/              Button, Badge, Toast, EmptyState, Skeleton
+├── data/
+│   └── mockData.js      55 transactions across Aug–Oct 2025
+├── pages/
+│   ├── Overview.jsx
+│   ├── Transactions.jsx
+│   ├── Insights.jsx
+│   └── AdminPanel.jsx
+├── store/
+│   └── useFinanceStore.js   Zustand + localStorage persistence
+├── utils/
+│   └── derive.js            All analytics logic — totals, patterns, insights, score
+├── AppLayout.jsx
+└── index.css
 ```
 
 ---
 
-## 🛠️ Local Environment Boot
+## Setup
 
-1. **Pull Dependencies:**
-   ```bash
-   npm install
-   ```
+```bash
+git clone <your-repo-url>
+cd zoryvn-finance-dashboard
+npm install
+npm run dev
+```
 
-2. **Launch the Environment Interface:**
-   ```bash
-   npm run dev
-   ```
+Open at `http://localhost:5173`
 
-3. Fire open the port in your browser. All interactions scale completely bound to your browser's persistent `localStorage`. Add new records out of the ledger dashboard via the tracking button to instantly see global metrics mathematically offset themselves across all charts, widgets, and suggestions natively!
+No environment variables needed. No backend. Works offline.
+
+---
+
+## Future Scope
+
+- Bank API integration (Setu / Plaid) for real transaction data
+- ML-based spending predictions using historical patterns
+- Budget goal-setting with progress tracking
+- Multi-currency support
+- Export to CSV/JSON (partially implemented in Admin panel)
+- Advanced date range filtering and grouping
+
+---
+
+## Mock Data Notes
+
+- 55 transactions across August–October 2025
+- Includes a 9-order food burst on Oct 14–15 (triggers suspicious activity alert)
+- Two active streaming subscriptions — Netflix + Hotstar (triggers duplicate detection)
+- Realistic amounts — ₹487 not ₹500, ₹9,200 not ₹9,000
+- Transaction titles read like actual UPI history: "Blinkit - Curd + bread", "Mom sent money", "Ola ride to airport"
+
+---
+
+Built by Vansh · IIIT Bhopal
