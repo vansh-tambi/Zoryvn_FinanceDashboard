@@ -4,6 +4,7 @@ import Sidebar from './Sidebar';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useFinanceStore } from '../store/useFinanceStore';
 import { CheckCircle } from 'lucide-react';
+import EmptyGlobalState from './EmptyGlobalState';
 
 const Toast = () => {
     const toast = useFinanceStore(state => state.toast);
@@ -37,6 +38,7 @@ const Toast = () => {
 
 const AppLayout = () => {
   const location = useLocation();
+  const transactions = useFinanceStore(state => state.transactions);
 
   return (
     <div className="flex h-screen w-full bg-[#030712] text-slate-100 overflow-hidden font-sans selection:bg-teal-500/30">
@@ -57,7 +59,7 @@ const AppLayout = () => {
                     transition={{ duration: 0.3 }}
                     className="h-full"
                 >
-                    <Outlet />
+                    {transactions.length === 0 && location.pathname !== '/transactions' ? <EmptyGlobalState /> : <Outlet />}
                 </motion.div>
             </AnimatePresence>
          </div>

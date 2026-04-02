@@ -4,6 +4,7 @@ import { useFinanceStore } from '../store/useFinanceStore';
 import { getPersonalityTags, getSuspiciousPatterns, getMonthlyCategoryComparison, getCategoryTotals } from '../utils/derive';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend } from 'recharts';
 import { AlertCircle, AlertTriangle, CheckCircle, Flame, Star, Zap } from 'lucide-react';
+import ActionableSuggestions from '../components/ActionableSuggestions';
 
 const COLORS = {
   food: '#f59e0b',
@@ -150,6 +151,19 @@ const InsightsPage = () => {
     // Safety check fallback
     if (!transactions) return <div className="p-8 text-slate-400">Loading metrics...</div>;
 
+    const expenses = transactions.filter(t => t.type === 'expense');
+    if (transactions.length > 0 && expenses.length === 0) {
+        return (
+            <div className="w-full h-full flex flex-col items-center justify-center pt-32 pb-24 text-center">
+                <div className="w-32 h-32 bg-teal-500/10 rounded-full flex items-center justify-center mb-6">
+                    <CheckCircle size={48} className="text-teal-500" />
+                </div>
+                <h2 className="text-3xl font-bold font-sora text-white mb-2">100% Savings</h2>
+                <p className="text-slate-400 max-w-md">You've logged income, but no expenses tracked yet! Your insights will generate once outbound cash flows begin.</p>
+            </div>
+        );
+    }
+
     const tags = getPersonalityTags(transactions);
     const patterns = getSuspiciousPatterns(transactions);
     const monthlyData = getMonthlyCategoryComparison(transactions);
@@ -181,7 +195,8 @@ const InsightsPage = () => {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <ActionableSuggestions />
                     <CategoryRanking totals={categoryTotals} />
                 </div>
             </div>

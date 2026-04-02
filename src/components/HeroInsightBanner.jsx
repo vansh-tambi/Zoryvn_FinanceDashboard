@@ -33,6 +33,8 @@ const HeroInsightBanner = () => {
             if (maxTxn) spikeDateStr = new Date(maxTxn.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         }
 
+        const savingsRate = ((currentTotals.income - currentTotals.expense) / (currentTotals.income || 1)) * 100;
+        const isNegativeSavings = savingsRate < 0;
         const isLess = deltaPct <= 0;
         const formattedExpense = currentTotals.expense.toLocaleString('en-IN');
         const headline = `You spent ₹${formattedExpense} this month — ${Math.abs(deltaPct).toFixed(1)}% ${isLess ? 'less' : 'more'} than last month.`;
@@ -40,6 +42,7 @@ const HeroInsightBanner = () => {
         return {
             headline,
             isLess,
+            isNegativeSavings,
             topCategory: cats[0]?.category || 'Unknown',
             spikeDate: spikeDateStr,
             tags: ['Stable flow', isLess ? 'Improving' : 'High Spend', 'On Track']
@@ -71,7 +74,11 @@ const HeroInsightBanner = () => {
                </div>
                
                <h2 className="text-xl md:text-[22px] font-bold font-sora text-slate-100 mb-2 leading-snug">
-                   {bannerData.headline}
+                   {bannerData.isNegativeSavings ? (
+                       <span className="text-red-400">Critical: You are spending more than you earn this month.</span>
+                   ) : (
+                       bannerData.headline
+                   )}
                </h2>
                
                <p className="text-slate-400 text-sm font-medium mb-5">

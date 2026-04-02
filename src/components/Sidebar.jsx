@@ -1,6 +1,8 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, Receipt, LineChart, Shield } from 'lucide-react';
+import StreakCard from './StreakCard';
+import StorageStatusBadge from './StorageStatusBadge';
 
 const Sidebar = () => {
   const navItems = [

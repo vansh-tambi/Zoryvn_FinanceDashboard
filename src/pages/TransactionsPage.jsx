@@ -63,19 +63,19 @@ const AddTransactionModal = ({ isOpen, onClose }) => {
         title: '', amount: '', category: 'food', type: 'expense', date: new Date().toISOString().substring(0, 10)
     });
 
+    const isFormValid = formData.title.trim() !== '' && Number(formData.amount) > 0 && formData.date !== '';
+
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (!isFormValid) return;
         addTransaction({
-            id: `TXN-NEW-${Date.now()}`,
-            title: formData.title,
+            id: Date.now().toString(),
+            ...formData,
             amount: Number(formData.amount),
-            category: formData.category,
-            type: formData.type,
-            date: new Date(formData.date).toISOString(),
             note: ''
         });
+        setFormData({ title: '', amount: '', category: 'food', type: 'expense', date: new Date().toISOString().split('T')[0], note: '' });
         onClose();
-        setFormData({ title: '', amount: '', category: 'food', type: 'expense', date: new Date().toISOString().substring(0, 10) });
     };
 
     return (
@@ -145,8 +145,12 @@ const AddTransactionModal = ({ isOpen, onClose }) => {
                                 </div>
                             </div>
 
-                            <button type="submit" className="w-full bg-teal-500 hover:bg-teal-400 text-slate-900 font-bold py-3.5 rounded-xl shadow-[0_0_20px_rgba(20,184,166,0.3)] transition-all mt-4">
-                                Confirm & Add
+                            <button 
+                                type="submit"
+                                disabled={!isFormValid}
+                                className="w-full py-4 rounded-xl bg-teal-500 text-slate-900 font-bold font-sora shadow-[0_5px_20px_rgba(20,184,166,0.2)] hover:shadow-[0_10px_25px_rgba(20,184,166,0.3)] transition-all hover:bg-teal-400 active:scale-[0.98] mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Add Transaction
                             </button>
                         </form>
                     </motion.div>
