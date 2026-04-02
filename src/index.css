@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme {
+  --color-glass-bg: rgba(30, 41, 59, 0.6);
+  --color-glass-border: rgba(51, 65, 85, 0.5);
+}
+
+body {
+  background-color: #020617; /* Slate 950 */
+  color: #f1f5f9; /* Slate 100 */
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer utilities {
+  .glass {
+    background-color: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5);
+  }
+}
