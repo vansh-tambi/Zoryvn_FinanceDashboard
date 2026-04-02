@@ -45,7 +45,7 @@ const AppLayout = () => {
   return (
     <div className="flex h-screen w-full bg-[#030712] text-slate-100 overflow-hidden font-sans selection:bg-teal-500/30">
       <Sidebar />
-      <main className="flex-1 md:ml-[240px] transition-all duration-300 h-full overflow-y-auto overflow-x-hidden relative pb-[80px] md:pb-0">
+      <main className="flex-1 md:ml-[228px] transition-all duration-300 h-full overflow-y-auto overflow-x-hidden relative pb-[80px] md:pb-0">
          <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
              <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-teal-900/10 blur-[150px]" />
              <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-blue-900/10 blur-[150px]" />

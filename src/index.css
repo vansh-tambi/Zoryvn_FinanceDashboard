@@ -4,20 +4,49 @@
   --color-glass-bg: rgba(30, 41, 59, 0.6);
   --color-glass-border: rgba(51, 65, 85, 0.5);
   --font-sora: "Sora", sans-serif;
+  --font-mono: "DM Mono", monospace;
 }
 
+/* ─── Global Reset ─────────────────────────────────── */
 body {
-  background-color: #030712; /* Deep slate */
+  background-color: #030712;
   color: #f1f5f9;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: "Sora", sans-serif;
   -webkit-font-smoothing: antialiased;
+  cursor: none; /* Custom cursor takes over */
 }
 
+/* ─── Typography System ─────────────────────────────── */
 h1, h2, h3, h4, h5, h6, .font-sora {
-  font-family: var(--font-sora);
+  font-family: "Sora", sans-serif;
 }
 
-/* Global Custom Scrollbar */
+/* All currency amounts and numeric values */
+.font-mono,
+[class*="font-mono"] {
+  font-family: "DM Mono", monospace;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Section labels — all caps, spaced, muted */
+.label-section {
+  font-family: "Sora", sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #7a9cc4;
+  font-weight: 600;
+}
+
+/* Numeric precision class */
+.num-tabular {
+  font-family: "DM Mono", monospace;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* ─── Global Custom Scrollbar ───────────────────────── */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -41,6 +70,7 @@ h1, h2, h3, h4, h5, h6, .font-sora {
   scrollbar-color: #1e293b transparent;
 }
 
+/* ─── Utilities ─────────────────────────────────────── */
 @layer utilities {
   .glass {
     background-color: var(--color-glass-bg);
@@ -48,5 +78,13 @@ h1, h2, h3, h4, h5, h6, .font-sora {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5);
+  }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 }

@@ -48,8 +48,8 @@ const TransactionList = () => {
                                 initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: shouldReduceMotion ? 0 : 0.3, ease: "easeOut", delay: delaySecs }}
-                                className="group relative flex items-center justify-between p-3.5 rounded-xl border border-transparent hover:border-[#252D42] hover:bg-[#0d1f3c] transition-colors duration-150 cursor-pointer overflow-hidden shadow-sm"
-                                style={{ willChange: "transform, opacity" }}
+                                className="group relative flex items-center justify-between rounded-xl border border-transparent hover:border-[#252D42] hover:bg-[#0d1f3c] transition-colors duration-150 overflow-hidden shadow-sm"
+                                style={{ padding: '13px 16px', willChange: "transform, opacity" }}
                             >
                                 <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-teal-500 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-150 ease-out" />
                                 <div className="flex items-center gap-4 z-10 pl-1">

@@ -55,7 +55,8 @@ const HeroInsightBanner = () => {
         <motion.div 
            initial={{ opacity: 0, y: -20 }}
            animate={{ opacity: 1, y: 0 }}
-           className="relative bg-[#0D1117] rounded-[24px] p-6 md:p-8 mb-6 overflow-hidden border border-[#252D42] shadow-[0_15px_40px_rgba(0,0,0,0.5)] group z-10 flex flex-col md:flex-row items-center justify-between gap-8 md:gap-4"
+           className="relative bg-[#0D1117] rounded-[24px] overflow-hidden border border-[#252D42] shadow-[0_15px_40px_rgba(0,0,0,0.5)] group z-10 flex flex-col md:flex-row items-center justify-between gap-8 md:gap-4 mb-6"
+           style={{ padding: '28px 32px' }}
         >
            {/* Animated gradient top border via Framer scale */}
            <motion.div 

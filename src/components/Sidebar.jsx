@@ -14,8 +14,9 @@ const NavItem = ({ item }) => {
             to={item.path}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            style={{ padding: '11px 16px' }}
             className={({ isActive }) =>
-                `group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-150 whitespace-nowrap overflow-hidden ${
+                `group relative flex items-center gap-3 rounded-xl transition-all duration-150 whitespace-nowrap overflow-hidden ${
                     isActive ? 'bg-[#0d1f3c] text-white' : 'text-slate-400 hover:bg-[#0d1f3c]/70 hover:text-slate-200'
                 }`
             }
@@ -46,7 +47,7 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className="hidden md:flex fixed inset-y-0 left-0 z-50 flex-col bg-[#0D1117] border-r border-[#1C2333] transition-all duration-300 w-[240px]">
+      <div className="hidden md:flex fixed inset-y-0 left-0 z-50 flex-col bg-[#0D1117] border-r border-[#1C2333] transition-all duration-300 w-[228px]">
         <div className="flex h-20 shrink-0 items-center px-4 justify-start">
            <div className="flex items-center gap-3 overflow-hidden">
                <div className="bg-teal-500/20 p-2 rounded-lg text-teal-500 shrink-0 shadow-[0_0_15px_rgba(20,184,166,0.3)] ring-1 ring-teal-500/30">

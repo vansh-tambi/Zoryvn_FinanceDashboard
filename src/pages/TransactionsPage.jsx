@@ -5,16 +5,29 @@ import { useFinanceStore } from '../store/useFinanceStore';
 import { Plus, Search, Filter, Receipt, LayoutTemplate } from 'lucide-react';
 
 const EmptyStateSVG = () => (
-    <div className="flex flex-col items-center justify-center text-center max-w-sm mx-auto">
-        <div className="relative w-32 h-32 mb-6">
-            <div className="absolute inset-0 bg-teal-500/10 rounded-full blur-2xl" />
-            <div className="absolute inset-4 bg-[#1C2333] border border-[#252D42] rounded-2xl rotate-12 shadow-lg" />
-            <div className="absolute inset-4 bg-[#0D1117] border border-[#252D42] rounded-2xl -rotate-6 shadow-xl flex items-center justify-center">
-                <LayoutTemplate size={40} className="text-teal-500/50" />
-            </div>
+    <div className="flex flex-col items-center gap-4">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            {/* Wallet body */}
+            <rect x="10" y="26" width="58" height="38" rx="7" fill="#0d1f3c" stroke="#3a5a7a" strokeWidth="1.5" strokeLinecap="round" />
+            {/* Wallet flap / top fold */}
+            <path d="M10 34 C10 30 14 26 18 26 H62 C66 26 68 28 68 31" stroke="#3a5a7a" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+            {/* Card slot */}
+            <rect x="44" y="38" width="18" height="11" rx="3" fill="none" stroke="#3a5a7a" strokeWidth="1.5" strokeLinecap="round" />
+            {/* Coin dot in slot */}
+            <circle cx="53" cy="43.5" r="2.5" fill="none" stroke="#3a5a7a" strokeWidth="1.2" />
+            {/* Sad eyes — left */}
+            <ellipse cx="26" cy="42" rx="2" ry="2.3" fill="none" stroke="#3a5a7a" strokeWidth="1.5" strokeLinecap="round" />
+            {/* Sad eyes — right (slightly higher for asymmetry) */}
+            <ellipse cx="36" cy="41.2" rx="2" ry="2.3" fill="none" stroke="#3a5a7a" strokeWidth="1.5" strokeLinecap="round" />
+            {/* Downward mouth arc */}
+            <path d="M24 52 Q31 48 38 52" stroke="#3a5a7a" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+            {/* Subtle shine line on wallet */}
+            <path d="M16 31 Q22 29 28 31" stroke="#3a5a7a" strokeWidth="1" strokeLinecap="round" opacity="0.5" />
+        </svg>
+        <div className="flex flex-col items-center gap-1 text-center">
+            <p className="text-white font-sora font-semibold" style={{ fontSize: '16px' }}>Nothing here</p>
+            <p className="text-slate-500 font-medium" style={{ fontSize: '13px' }}>Try clearing your filters</p>
         </div>
-        <h3 className="text-xl font-bold font-sora text-white mb-2">No matches found</h3>
-        <p className="text-slate-400 text-sm">Your filters didn't match any tracked records. Try dropping the category boundaries.</p>
     </div>
 );
 
@@ -94,7 +107,7 @@ const AddTransactionModal = ({ isOpen, onClose }) => {
                             <div className="flex flex-col gap-1 mb-2">
                                 <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Category</label>
                                 <div className="relative">
-                                    <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full bg-[#0D1117] border border-[#252D42] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-teal-500 transition-all appearance-none cursor-pointer font-medium">
+                                    <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full bg-[#0D1117] border border-[#252D42] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-teal-500 transition-all appearance-none font-medium">
                                         {formData.type === 'expense' ? (
                                             <>
                                                 <option value="food">Food & Dining</option>
@@ -238,8 +251,8 @@ const TransactionsPage = () => {
                                         initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 10 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ duration: shouldReduceMotion ? 0 : 0.3, ease: "easeOut", delay: delaySecs }}
-                                        className="grid grid-cols-12 gap-4 p-4 border-b border-[#252D42]/50 hover:bg-[#1C2333]/50 transition-colors group cursor-pointer items-center relative overflow-hidden"
-                                        style={{ willChange: "transform, opacity" }}
+                                        className="grid grid-cols-12 gap-4 border-b border-[#252D42]/50 hover:bg-[#1C2333]/50 transition-colors group items-center relative overflow-hidden"
+                                        style={{ padding: '13px 16px', willChange: "transform, opacity" }}
                                     >
                                         <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-teal-500 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-150 ease-out" />
                                         
