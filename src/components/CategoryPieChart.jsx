@@ -71,7 +71,7 @@ const CategoryPieChart = () => {
             </div>
 
             <div className="flex-1 w-full min-h-0 z-0 pb-2">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
                     <PieChart>
                         <Pie
                             data={data}

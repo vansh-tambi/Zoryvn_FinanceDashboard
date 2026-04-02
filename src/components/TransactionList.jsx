@@ -24,7 +24,10 @@ const bgColors = {
 };
 
 const TransactionList = () => {
-    const transactions = useFinanceStore(state => state.getRecentTransactions(20));
+    const allTransactions = useFinanceStore(state => state.transactions);
+    const transactions = React.useMemo(() => {
+        return [...allTransactions].sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0, 20);
+    }, [allTransactions]);
 
     return (
         <div className="h-full overflow-y-auto pr-2 pb-[40px] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700/50 [&::-webkit-scrollbar-thumb]:rounded-full">

@@ -50,7 +50,7 @@ const BalanceAreaChart = () => {
             <h3 className="text-white font-sora font-semibold mb-4 text-lg z-10 relative">Balance Trend</h3>
             <div className="absolute top-[-20%] left-[-10%] w-[40%] h-[40%] rounded-full bg-teal-900/10 blur-[80px] pointer-events-none" />
             <div className="flex-1 w-full min-h-0 z-10 relative">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
                     <AreaChart data={data} margin={{ top: 15, right: 15, left: -20, bottom: 0 }}>
                         <defs>
                             <linearGradient id="tealGradient" x1="0" y1="0" x2="0" y2="1">

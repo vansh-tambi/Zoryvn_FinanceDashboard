@@ -5,6 +5,7 @@ import SummaryCards from './SummaryCards';
 import TransactionList from './TransactionList';
 import BalanceAreaChart from './BalanceAreaChart';
 import CategoryPieChart from './CategoryPieChart';
+import HeroInsightBanner from './HeroInsightBanner';
 
 const Dashboard = () => {
   return (
@@ -29,6 +30,9 @@ const Dashboard = () => {
         </div>
       </motion.div>
       
+      {/* Hero Insight Banner */}
+      <HeroInsightBanner />
+
       {/* Metrics Row */}
       <SummaryCards />
       

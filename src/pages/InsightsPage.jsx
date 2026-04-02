@@ -86,7 +86,7 @@ const MonthlyBarChart = ({ data }) => {
        <motion.div variants={slideUp} className="bg-[#1C2333] border border-[#252D42] rounded-[24px] p-6 h-[400px] flex flex-col">
            <h3 className="text-xl font-bold font-sora text-white mb-6">Monthly Evolution</h3>
            <div className="flex-1 min-h-0 w-full overflow-hidden">
-               <ResponsiveContainer width="100%" height="100%">
+               <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
                    <BarChart data={data} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
                        <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.3} vertical={false} />
                        <XAxis dataKey="month" stroke="#94a3b8" axisLine={false} tickLine={false} tick={{fontSize: 12, fontWeight: 'bold'}} dy={10} />
