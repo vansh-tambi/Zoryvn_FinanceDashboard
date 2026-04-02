@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useFinanceStore } from '../store/useFinanceStore';
 import { getActionableSuggestions } from '../utils/derive';
 import { Coffee, Flame, AlertTriangle, CheckCircle, ChevronRight, Zap } from 'lucide-react';
@@ -7,6 +7,7 @@ import { Coffee, Flame, AlertTriangle, CheckCircle, ChevronRight, Zap } from 'lu
 const ActionableSuggestions = () => {
     const transactions = useFinanceStore(state => state.transactions);
     const suggestions = useMemo(() => getActionableSuggestions(transactions), [transactions]);
+    const shouldReduceMotion = useReducedMotion();
 
     const getIconSrc = (iconName) => {
         switch(iconName) {
@@ -19,26 +20,42 @@ const ActionableSuggestions = () => {
     };
 
     const getBorderClass = (priority) => {
-        if (priority === 'red') return 'border-l-red-500';
-        if (priority === 'amber') return 'border-l-amber-500';
-        return 'border-l-green-500';
+        if (priority === 'red') return 'border-l-red-500 hover:border-l-red-400';
+        if (priority === 'amber') return 'border-l-amber-500 hover:border-l-amber-400';
+        return 'border-l-green-500 hover:border-l-green-400';
     };
 
     if (suggestions.length === 0) return null;
+
+    const containerVariants = {
+       hidden: {},
+       visible: { transition: { staggerChildren: shouldReduceMotion ? 0 : 0.08 } }
+    };
+
+    const itemVariants = {
+       hidden: { opacity: 0, x: shouldReduceMotion ? 0 : -16 },
+       visible: { opacity: 1, x: 0, transition: { duration: shouldReduceMotion ? 0 : 0.3, ease: 'easeOut' } }
+    };
 
     return (
         <div className="flex flex-col gap-4">
             <h3 className="text-lg font-sora font-semibold text-white flex items-center gap-2">
                 <Zap size={18} className="text-teal-400" /> Actionable Insights
             </h3>
-            <div className="flex flex-col gap-3">
+            <motion.div 
+               variants={containerVariants}
+               initial="hidden"
+               whileInView="visible"
+               viewport={{ once: true }}
+               className="flex flex-col gap-3"
+            >
                 <AnimatePresence>
                     {suggestions.map((item, i) => (
                         <motion.div 
                            key={i}
-                           initial={{ opacity: 0, x: -10 }}
-                           animate={{ opacity: 1, x: 0 }}
-                           className={`bg-[#1C2333] border border-[#252D42] border-l-[4px] ${getBorderClass(item.priority)} rounded-2xl p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 group hover:bg-[#1A202C] transition-colors shadow-lg`}
+                           variants={itemVariants}
+                           className={`bg-[#1C2333] border border-[#252D42] border-l-[4px] ${getBorderClass(item.priority)} rounded-2xl p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 group hover:bg-[#1C2333]/70 hover:brightness-105 transition-all shadow-lg`}
+                           style={{ willChange: "transform, opacity" }}
                         >
                            <div className="flex items-center gap-4 flex-1">
                                <div className="w-10 h-10 rounded-full bg-[#0D1117] border border-[#252D42] flex items-center justify-center shrink-0">
@@ -59,7 +76,7 @@ const ActionableSuggestions = () => {
                         </motion.div>
                     ))}
                 </AnimatePresence>
-            </div>
+            </motion.div>
         </div>
     );
 };

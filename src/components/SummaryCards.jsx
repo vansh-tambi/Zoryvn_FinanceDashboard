@@ -1,131 +1,94 @@
-import React, { useEffect } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import React, { useEffect, useMemo } from 'react';
+import { motion, useSpring, useMotionValue, useReducedMotion } from 'framer-motion';
 import { useFinanceStore } from '../store/useFinanceStore';
-import { IndianRupee, ArrowUpRight, ArrowDownRight, Wallet, TrendingUp, PiggyBank, ReceiptText } from 'lucide-react';
 import { getTotalBalance, getSavingsRate } from '../utils/derive';
+import { Wallet, TrendingUp, TrendingDown, PiggyBank } from 'lucide-react';
 
-const AnimatedNumber = ({ value, prefix }) => {
+const AnimatedCounter = ({ value, prefix = '₹' }) => {
+  const shouldReduceMotion = useReducedMotion();
   const motionValue = useMotionValue(0);
-  const springValue = useSpring(motionValue, { stiffness: 50, damping: 20 });
-  const displayValue = useTransform(springValue, (current) => {
-     return prefix === '₹' 
-       ? `${prefix}${Math.round(current).toLocaleString('en-IN')}` 
-       : `${Math.round(current)}${prefix}`;
-  });
+  const springValue = useSpring(motionValue, { stiffness: 60, damping: 15 });
+  const [displayValue, setDisplayValue] = React.useState(0);
 
   useEffect(() => {
-    motionValue.set(value);
-  }, [value, motionValue]);
+    if (shouldReduceMotion) {
+      setDisplayValue(value);
+    } else {
+      motionValue.set(value);
+    }
+  }, [value, motionValue, shouldReduceMotion]);
 
-  return <motion.span>{displayValue}</motion.span>;
-};
+  useEffect(() => {
+    if (shouldReduceMotion) return;
+    return springValue.onChange((latest) => {
+      setDisplayValue(Math.floor(latest));
+    });
+  }, [springValue, shouldReduceMotion]);
 
-const Sparkline = ({ color, dataPts }) => {
-  if (!dataPts || dataPts.length !== 7) return null;
-  const max = Math.max(...dataPts) || 1;
-  const min = Math.min(...dataPts) || 0;
-  const range = max - min || 1;
-  
-  const points = dataPts.map((val, i) => {
-    const x = (i / 6) * 100;
-    const y = 40 - (((val - min) / range) * 35);
-    return `${x},${y}`;
-  }).join(' ');
-
-  return (
-    <svg className="absolute bottom-4 right-4 w-20 h-10 opacity-40 transition-opacity group-hover:opacity-100" viewBox="0 -5 100 50" preserveAspectRatio="none">
-       <polyline fill="none" stroke={color} strokeWidth="2.5" points={points} strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
-  );
-};
-
-const SummaryCard = ({ label, value, prefix, trend, icon: Icon, accentColor, sparklineData }) => {
-  const isPositive = trend >= 0;
-  
-  return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -4 }}
-      className="relative overflow-hidden bg-[#1C2333] p-5 rounded-[16px] border border-[#252D42] hover:border-teal-500/50 hover:shadow-[0_0_20px_rgba(20,184,166,0.15)] transition-all duration-300 group cursor-default"
-    >
-       <div className="flex justify-between items-start mb-4">
-           <span className="text-slate-400 font-medium text-sm tracking-wide">{label}</span>
-           <div className="p-2 rounded-lg" style={{ backgroundColor: `${accentColor}1A`, color: accentColor }}>
-               <Icon size={18} />
-           </div>
-       </div>
-
-       <div className="flex flex-col gap-1 relative z-10">
-           <h3 className="text-2xl font-bold font-sora tracking-tight text-white mb-1">
-               <AnimatedNumber value={value} prefix={prefix} />
-           </h3>
-           <div className="flex items-center text-xs font-semibold mt-1">
-               <span className={`flex items-center px-1.5 py-0.5 rounded-md ${isPositive ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>
-                   {isPositive ? <TrendingUp size={12} className="mr-1" /> : <ArrowDownRight size={12} className="mr-1" />}
-                   {Math.abs(trend)}%
-               </span>
-               <span className="text-slate-500 ml-2 font-medium">vs last month</span>
-           </div>
-       </div>
-
-       <Sparkline color={accentColor} dataPts={sparklineData} />
-    </motion.div>
-  );
+  return <span>{prefix}{displayValue.toLocaleString('en-IN')}</span>;
 };
 
 const SummaryCards = () => {
   const transactions = useFinanceStore(state => state.transactions);
+  const shouldReduceMotion = useReducedMotion();
   
-  const { income, expense, balance } = getTotalBalance(transactions);
-  const savingsRate = getSavingsRate(transactions);
+  const { income, expense, balance, savingsRate } = useMemo(() => {
+    return { ...getTotalBalance(transactions), savingsRate: getSavingsRate(transactions) };
+  }, [transactions]);
 
-  const cardsData = [
-    {
-      label: 'Total Balance',
-      value: balance,
-      prefix: '₹',
-      trend: 12.5,
-      icon: Wallet,
-      accentColor: '#14b8a6', // teal
-      sparklineData: [40, 45, 42, 55, 60, 58, 65]
-    },
-    {
-      label: 'Total Income',
-      value: income,
-      prefix: '₹',
-      trend: 8.2,
-      icon: IndianRupee,
-      accentColor: '#10b981', // green
-      sparklineData: [50, 50, 50, 50, 85, 85, 90]
-    },
-    {
-      label: 'Total Expenses',
-      value: expense,
-      prefix: '₹',
-      trend: -4.1,
-      icon: ReceiptText,
-      accentColor: '#ef4444', // red
-      sparklineData: [20, 30, 25, 40, 35, 55, 45]
-    },
-    {
-      label: 'Savings Rate',
-      value: savingsRate,
-      prefix: '%',
-      trend: 2.4,
-      icon: PiggyBank,
-      accentColor: '#8b5cf6', // purple
-      sparklineData: [10, 15, 12, 20, 18, 25, 33]
-    }
+  const cards = [
+    { label: 'Total Balance', value: balance, icon: Wallet, color: 'text-blue-400' },
+    { label: 'Total Income', value: income, icon: TrendingUp, color: 'text-teal-400' },
+    { label: 'Total Expenses', value: expense, icon: TrendingDown, color: 'text-red-400' },
+    { label: 'Savings Rate', value: Math.max(0, savingsRate), icon: PiggyBank, color: 'text-purple-400', prefix: '', suffix: '%' }
   ];
 
+  const containerVariants = {
+      hidden: {},
+      visible: { transition: { staggerChildren: shouldReduceMotion ? 0 : 0.08 } }
+  };
+
+  const cardVariants = {
+      hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 20 },
+      visible: { opacity: 1, y: 0, transition: { duration: shouldReduceMotion ? 0 : 0.3, ease: "easeOut" } }
+  };
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-       {cardsData.map((card, idx) => (
-           <SummaryCard key={idx} {...card} />
-       ))}
-    </div>
+    <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+      {cards.map((c, i) => (
+         <motion.div 
+           key={i}
+           variants={cardVariants}
+           whileHover={!shouldReduceMotion ? { y: -4, borderColor: "rgba(0, 217, 163, 0.18)" } : {}}
+           whileTap={!shouldReduceMotion ? { scale: 0.98 } : {}}
+           transition={{ y: { duration: 0.2, ease: "easeOut" }, borderColor: { duration: 0.2, ease: "easeOut" }, scale: { type: "spring", stiffness: 400, damping: 17 } }}
+           className="bg-[#1C2333] border border-[#1e3a5f] rounded-2xl p-6 flex flex-col relative overflow-hidden cursor-pointer w-full shadow-lg"
+           style={{ willChange: "transform" }}
+         >
+             <div className="flex justify-between items-start mb-4">
+                 <div className={`p-3 rounded-full bg-[#0D1117] border border-[#252D42] ${c.color}`}>
+                     <c.icon size={22} />
+                 </div>
+                 <div className="flex items-center gap-1 text-xs font-bold text-teal-400 bg-teal-500/10 px-2 py-1 rounded">
+                     ↑ 2.4%
+                 </div>
+             </div>
+             <p className="text-sm font-medium text-slate-400 mb-1">{c.label}</p>
+             <h2 className="text-2xl font-bold font-sora text-white tracking-wide">
+                 <AnimatedCounter value={c.value} prefix={c.prefix !== undefined ? c.prefix : '₹'} />{c.suffix}
+             </h2>
+             <svg className="absolute bottom-0 right-0 w-24 h-16 opacity-30" viewBox="0 0 100 50">
+                 <path d="M0,50 Q10,30 20,40 T40,20 T60,35 T80,10 T100,20 L100,50 Z" fill="url(#sparkline)" />
+                 <defs>
+                     <linearGradient id="sparkline" x1="0" y1="0" x2="0" y2="1">
+                         <stop offset="0%" stopColor="#14b8a6" stopOpacity="0.5" />
+                         <stop offset="100%" stopColor="#14b8a6" stopOpacity="0" />
+                     </linearGradient>
+                 </defs>
+             </svg>
+         </motion.div>
+      ))}
+    </motion.div>
   );
 };
-
 export default SummaryCards;

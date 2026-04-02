@@ -1,73 +1,53 @@
 import React, { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer, Sector } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Sector } from 'recharts';
 import { useFinanceStore } from '../store/useFinanceStore';
 import { getCategoryTotals } from '../utils/derive';
+import { motion, useReducedMotion } from 'framer-motion';
 
-const COLORS = ['#14b8a6', '#8b5cf6', '#3b82f6', '#f59e0b', '#ef4444', '#ec4899'];
+const COLORS = ['#f59e0b', '#3b82f6', '#ec4899', '#eab308', '#a855f7', '#22c55e', '#14b8a6', '#64748b'];
 
 const renderActiveShape = (props) => {
-  const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props;
-  return (
-    <g>
-      <Sector
-        cx={cx}
-        cy={cy}
-        innerRadius={innerRadius}
-        outerRadius={outerRadius + 8} // Expanding logic
-        startAngle={startAngle}
-        endAngle={endAngle}
-        fill={fill}
-      />
-    </g>
-  );
-};
-
-const CustomTooltip = ({ active, payload }) => {
-  if (active && payload && payload.length) {
+    const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload, value } = props;
     return (
-      <div className="bg-[#0D1117] border border-slate-700 p-3 rounded-xl shadow-xl pointer-events-none">
-        <p className="text-slate-300 text-xs font-semibold uppercase tracking-wider mb-1">
-          {payload[0].name}
-        </p>
-        <p className="text-white font-bold text-lg">
-           ₹{payload[0].value.toLocaleString('en-IN')}
-        </p>
-      </div>
+        <g>
+            <text x={cx} y={cy - 10} dy={8} textAnchor="middle" fill="#fff" className="font-sora font-bold text-lg capitalize">{payload.category}</text>
+            <text x={cx} y={cy + 15} dy={8} textAnchor="middle" fill="#94a3b8" className="text-xs font-semibold">₹{value.toLocaleString()}</text>
+            <Sector cx={cx} cy={cy} innerRadius={innerRadius} outerRadius={outerRadius + 8} startAngle={startAngle} endAngle={endAngle} fill={fill} />
+            <Sector cx={cx} cy={cy} startAngle={startAngle} endAngle={endAngle} innerRadius={outerRadius + 10} outerRadius={outerRadius + 12} fill={fill} />
+        </g>
     );
-  }
-  return null;
 };
 
 const CategoryPieChart = () => {
     const transactions = useFinanceStore(state => state.transactions);
-    const [activeIndex, setActiveIndex] = useState(-1);
-    
-    const data = useMemo(() => {
-        let sorted = getCategoryTotals(transactions);
-        if (sorted.length > 6) {
-           const top5 = sorted.slice(0, 5);
-           const otherTotal = sorted.slice(5).reduce((acc, c) => acc + c.total, 0);
-           return [...top5, { category: 'other', total: otherTotal }];
-        }
-        return sorted;
-    }, [transactions]);
+    const shouldReduceMotion = useReducedMotion();
+    const data = useMemo(() => getCategoryTotals(transactions).slice(0, 6), [transactions]);
+    const [activeIndex, setActiveIndex] = useState(0);
 
-    const topCategory = data.length > 0 ? data[0].category : '';
-    
+    const onPieEnter = (_, index) => {
+        setActiveIndex(index);
+    };
+
+    if (data.length === 0) {
+       return (
+         <motion.div whileInView={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 24 }} viewport={{ once: true, margin: "-60px" }} transition={{ duration: shouldReduceMotion ? 0 : 0.3, ease: "easeOut" }} className="bg-[#1C2333] border border-[#252D42] rounded-3xl p-6 h-full flex items-center justify-center text-slate-500 shadow-lg">
+            No expenses logged yet.
+         </motion.div>
+       );
+    }
+
     return (
         <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="w-full h-full bg-[#1C2333] p-6 rounded-[16px] border border-[#252D42] flex flex-col relative overflow-hidden"
+            whileInView={{ opacity: 1, y: 0 }} 
+            initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 24 }} 
+            viewport={{ once: true, margin: "-60px" }} 
+            whileHover={!shouldReduceMotion ? { scale: 1.01 } : {}}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.3, ease: "easeOut" }}
+            style={{ willChange: "transform, opacity" }}
+            className="bg-[#1C2333] border border-[#252D42] rounded-[24px] p-6 h-full flex flex-col relative overflow-hidden shadow-lg"
         >
-            <h3 className="text-white font-sora font-semibold mb-2 text-lg z-10 relative">Spending by Category</h3>
-            
-            {/* Absolute overlay for "donut hole" text */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10 mt-8">
-                <span className="text-[10px] uppercase tracking-widest text-slate-500 font-semibold mb-0.5">Top Category</span>
-                <span className="text-xl font-bold font-sora text-slate-100 capitalize">{topCategory}</span>
+            <div className="flex justify-between items-center mb-2 z-10 relative">
+                <h3 className="text-white font-sora font-semibold text-lg">Top Spendings</h3>
             </div>
 
             <div className="flex-1 w-full min-h-0 z-0 pb-2">
@@ -75,30 +55,22 @@ const CategoryPieChart = () => {
                     <PieChart>
                         <Pie
                             data={data}
-                            dataKey="total"
-                            nameKey="category"
                             cx="50%"
                             cy="50%"
-                            innerRadius={"65%"}
-                            outerRadius={"85%"}
+                            innerRadius={60}
+                            outerRadius={80}
                             paddingAngle={5}
+                            dataKey="total"
+                            onMouseEnter={onPieEnter}
                             activeIndex={activeIndex}
                             activeShape={renderActiveShape}
-                            onMouseEnter={(_, index) => setActiveIndex(index)}
-                            onMouseLeave={() => setActiveIndex(-1)}
-                            animationDuration={1500}
+                            stroke="none"
+                            animationDuration={1000}
                         >
                             {data.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="transparent" />
+                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                             ))}
                         </Pie>
-                        <Tooltip content={<CustomTooltip />} />
-                        <Legend 
-                           wrapperStyle={{ fontSize: '11px', fontWeight: 500, fontFamily: 'system-ui' }} 
-                           formatter={(value) => <span className="text-slate-400 capitalize hover:text-slate-200 transition-colors cursor-pointer ml-1.5">{value}</span>}
-                           iconType="circle"
-                           iconSize={8}
-                        />
                     </PieChart>
                 </ResponsiveContainer>
             </div>

@@ -1,25 +1,16 @@
 import React, { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion, useMotionValue, useSpring } from 'framer-motion';
 import { useFinanceStore } from '../store/useFinanceStore';
 import { getSavingsRate, getMonthlyTotals, getCategoryTotals } from '../utils/derive';
 
 const Tooltip = ({ children, content }) => {
     const [isVisible, setIsVisible] = useState(false);
     return (
-        <div 
-            className="relative w-full" 
-            onMouseEnter={() => setIsVisible(true)} 
-            onMouseLeave={() => setIsVisible(false)}
-        >
+        <div className="relative w-full" onMouseEnter={() => setIsVisible(true)} onMouseLeave={() => setIsVisible(false)}>
             {children}
             <AnimatePresence>
                 {isVisible && (
-                    <motion.div 
-                        initial={{ opacity: 0, y: 5 }} 
-                        animate={{ opacity: 1, y: 0 }} 
-                        exit={{ opacity: 0, y: 5 }}
-                        className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-[#1C2333] border border-[#252D42] text-[10px] sm:text-xs text-slate-300 rounded-lg shadow-xl z-50 pointer-events-none text-center"
-                    >
+                    <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 5 }} className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-[#1C2333] border border-[#252D42] text-[10px] sm:text-xs text-slate-300 rounded-lg shadow-xl z-50 pointer-events-none text-center">
                         {content}
                     </motion.div>
                 )}
@@ -28,19 +19,35 @@ const Tooltip = ({ children, content }) => {
     );
 };
 
+const AnimatedHealthScore = ({ value, colorClass }) => {
+    const shouldReduceMotion = useReducedMotion();
+    const motionValue = useMotionValue(0);
+    const spring = useSpring(motionValue, { stiffness: 45, damping: 15 });
+    const [display, setDisplay] = React.useState(0);
+    
+    React.useEffect(() => {
+        if (shouldReduceMotion) setDisplay(value);
+        else {
+            motionValue.set(value);
+            return spring.onChange(v => setDisplay(Math.floor(v)));
+        }
+    }, [value, motionValue, shouldReduceMotion, spring]);
+    
+    return <span className={`font-sora font-bold text-2xl leading-none ${colorClass}`}>{display}</span>;
+};
+
 const FinancialHealthScore = () => {
     const transactions = useFinanceStore(state => state.transactions);
+    const shouldReduceMotion = useReducedMotion();
 
     const metrics = useMemo(() => {
-        // 1. Savings Score (max 40)
         const savingsRate = getSavingsRate(transactions);
         const savingsScoreRaw = (savingsRate / 50) * 40;
         const savingsScore = Math.min(40, Math.max(0, savingsScoreRaw));
 
-        // 2. Consistency Score (max 30)
         const monthKeys = [...new Set(transactions.map(t => t.date.substring(0, 7)))];
         const monthlyExpenses = monthKeys.map(m => getMonthlyTotals(transactions, m).expense);
-        let consistencyScore = 30; // perfect score if not enough data
+        let consistencyScore = 30; 
         if (monthlyExpenses.length > 1) {
             const mean = monthlyExpenses.reduce((a, b) => a + b, 0) / monthlyExpenses.length;
             if (mean > 0) {
@@ -51,7 +58,6 @@ const FinancialHealthScore = () => {
             }
         }
 
-        // 3. Category Balance (max 30)
         const cats = getCategoryTotals(transactions).filter(c => c.category !== 'salary' && c.category !== 'freelance');
         let categoryBalance = 30;
         if (cats.length > 0) {
@@ -59,7 +65,7 @@ const FinancialHealthScore = () => {
             if (totalExpense > 0) {
                 const topRatio = cats[0].total / totalExpense;
                 if (topRatio > 0.6) {
-                    const overage = topRatio - 0.6; // max 0.4 over
+                    const overage = topRatio - 0.6;
                     categoryBalance = Math.max(0, 30 - ((overage / 0.4) * 30));
                 }
             }
@@ -73,14 +79,11 @@ const FinancialHealthScore = () => {
     
     let colorClass, strokeColor;
     if (totalScore > 70) {
-        colorClass = "text-green-500";
-        strokeColor = "#22c55e";
+        colorClass = "text-green-500"; strokeColor = "#22c55e";
     } else if (totalScore >= 40) {
-        colorClass = "text-amber-500";
-        strokeColor = "#f59e0b";
+        colorClass = "text-amber-500"; strokeColor = "#f59e0b";
     } else {
-        colorClass = "text-red-500";
-        strokeColor = "#ef4444";
+        colorClass = "text-red-500"; strokeColor = "#ef4444";
     }
 
     const radius = 35;
@@ -103,11 +106,11 @@ const FinancialHealthScore = () => {
                         strokeDasharray={circumference}
                         initial={{ strokeDashoffset: circumference }}
                         animate={{ strokeDashoffset }}
-                        transition={{ duration: 1.8, ease: "easeOut", type: "spring", bounce: 0.2 }}
+                        transition={{ duration: shouldReduceMotion ? 0 : 1.2, ease: "easeOut" }}
                     />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                    <span className={`font-sora font-bold text-2xl leading-none ${colorClass}`}>{totalScore}</span>
+                    <AnimatedHealthScore value={totalScore} colorClass={colorClass} />
                     <span className="text-[9px] uppercase tracking-widest text-slate-400 mt-1">Health</span>
                 </div>
             </div>
@@ -125,7 +128,7 @@ const FinancialHealthScore = () => {
                         </div>
                     </div>
                 </Tooltip>
-
+                
                 <Tooltip content="Checks Standard Deviation of expenses. High variance impacts score.">
                     <div className="flex items-center gap-3">
                         <span className="text-[10px] uppercase font-bold text-slate-400 w-[65px] leading-none text-right tracking-tight">Consistency</span>

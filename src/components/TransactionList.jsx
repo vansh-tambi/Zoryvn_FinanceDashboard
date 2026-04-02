@@ -1,65 +1,82 @@
-import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useMemo } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useFinanceStore } from '../store/useFinanceStore';
-import { Coffee, Home, ShoppingBag, Car, Film, Wallet, Briefcase } from 'lucide-react';
+import { Coffee, Home, ShoppingBag, Car, Film, Wallet, Briefcase, Receipt } from 'lucide-react';
 
 const categoryIcons = {
-    food: <Coffee size={18} className="text-orange-400" />,
-    rent: <Home size={18} className="text-blue-400" />,
-    shopping: <ShoppingBag size={18} className="text-pink-400" />,
-    transport: <Car size={18} className="text-yellow-400" />,
-    subscription: <Film size={18} className="text-purple-400" />,
-    salary: <Wallet size={18} className="text-green-400" />,
-    freelance: <Briefcase size={18} className="text-teal-400" />
+    food: <Coffee size={16} className="text-orange-400" />,
+    rent: <Home size={16} className="text-blue-400" />,
+    shopping: <ShoppingBag size={16} className="text-pink-400" />,
+    transport: <Car size={16} className="text-yellow-400" />,
+    entertainment: <Film size={16} className="text-purple-400" />,
+    subscription: <Film size={16} className="text-indigo-400" />,
+    salary: <Briefcase size={16} className="text-green-400" />,
+    freelance: <Wallet size={16} className="text-teal-400" />
 };
 
-const bgColors = {
-    food: 'bg-orange-500/10 ring-orange-500/20',
-    rent: 'bg-blue-500/10 ring-blue-500/20',
-    shopping: 'bg-pink-500/10 ring-pink-500/20',
-    transport: 'bg-yellow-500/10 ring-yellow-500/20',
-    subscription: 'bg-purple-500/10 ring-purple-500/20',
-    salary: 'bg-green-500/10 ring-green-500/20',
-    freelance: 'bg-teal-500/10 ring-teal-500/20'
+const categoryColors = {
+    food: 'bg-orange-500', rent: 'bg-blue-500', shopping: 'bg-pink-500',
+    transport: 'bg-yellow-500', entertainment: 'bg-purple-500', subscription: 'bg-indigo-500',
+    salary: 'bg-green-500', freelance: 'bg-teal-500'
 };
 
 const TransactionList = () => {
     const allTransactions = useFinanceStore(state => state.transactions);
-    const transactions = React.useMemo(() => {
+    const shouldReduceMotion = useReducedMotion();
+    
+    const transactions = useMemo(() => {
         return [...allTransactions].sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0, 20);
     }, [allTransactions]);
 
     return (
-        <div className="h-full overflow-y-auto pr-2 pb-[40px] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700/50 [&::-webkit-scrollbar-thumb]:rounded-full">
-            <AnimatePresence>
-                {transactions.map((t, idx) => (
-                    <motion.div
-                        key={t.id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 20 }}
-                        transition={{ delay: idx * 0.05 }}
-                        className="flex items-center justify-between p-3 mb-3 bg-slate-800/30 hover:bg-slate-800/60 transition-colors rounded-xl border border-slate-700/30 group cursor-pointer"
-                    >
-                        <div className="flex items-center gap-3">
-                            <div className={`p-2.5 rounded-xl ring-1 ${bgColors[t.category] || 'bg-slate-700 ring-slate-600'}`}>
-                                {categoryIcons[t.category] || <Wallet size={18} className="text-slate-400" />}
-                            </div>
-                            <div>
-                                <h4 className="text-sm font-semibold text-slate-200 group-hover:text-white transition-colors">{t.title}</h4>
-                                <p className="text-xs text-slate-500 capitalize">
-                                    {new Date(t.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} • {t.category}
-                                </p>
-                            </div>
-                        </div>
-                        <div className={`font-bold text-sm ${t.type === 'income' ? 'text-green-400' : 'text-slate-100'}`}>
-                            {t.type === 'income' ? '+' : '-'}₹{t.amount.toLocaleString('en-IN')}
-                        </div>
-                    </motion.div>
-                ))}
-            </AnimatePresence>
+        <div className="h-full overflow-y-auto pr-2 pb-[40px] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700/50 [&::-webkit-scrollbar-thumb]:rounded-full overflow-x-hidden">
+            {transactions.length === 0 ? (
+                <div className="h-full flex flex-col items-center justify-center text-slate-500 text-sm py-8 text-center pt-12">
+                   <Receipt size={32} className="mb-3 opacity-50" />
+                   No recent transactions
+                </div>
+            ) : (
+                <div className="flex flex-col gap-3 py-1">
+                    {transactions.map((tx, i) => {
+                        const isIncome = tx.type === 'income';
+                        const sign = isIncome ? '+' : '-';
+                        const delaySecs = shouldReduceMotion ? 0 : Math.min(i, 8) * 0.05;
+                        
+                        return (
+                            <motion.div
+                                key={tx.id}
+                                initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: shouldReduceMotion ? 0 : 0.3, ease: "easeOut", delay: delaySecs }}
+                                className="group relative flex items-center justify-between p-3.5 rounded-xl border border-transparent hover:border-[#252D42] hover:bg-[#0d1f3c] transition-colors duration-150 cursor-pointer overflow-hidden shadow-sm"
+                                style={{ willChange: "transform, opacity" }}
+                            >
+                                <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-teal-500 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-150 ease-out" />
+                                <div className="flex items-center gap-4 z-10 pl-1">
+                                    <div className={`p-2.5 rounded-full bg-slate-900 border border-slate-800 shrink-0 shadow-inner ${categoryColors[tx.category]?.replace('bg-', 'text-') || 'text-slate-400'}`}>
+                                        {categoryIcons[tx.category] || <Wallet size={16} />}
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="font-semibold text-sm text-slate-200 group-hover:text-white transition-colors">{tx.title}</span>
+                                        <span className="text-xs text-slate-500 flex items-center gap-2">
+                                            {new Date(tx.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                        </span>
+                                    </div>
+                                </div>
+                                <motion.div 
+                                    className="flex flex-col items-end z-10"
+                                    whileHover={!shouldReduceMotion ? { scale: 1.04 } : {}}
+                                >
+                                    <span className={`font-mono font-bold text-[15px] ${isIncome ? 'text-teal-400' : 'text-red-400'}`}>
+                                        {sign}₹{tx.amount.toLocaleString('en-IN')}
+                                    </span>
+                                </motion.div>
+                            </motion.div>
+                        );
+                    })}
+                </div>
+            )}
         </div>
     );
 };
-
 export default TransactionList;
