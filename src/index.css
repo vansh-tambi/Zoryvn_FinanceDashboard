@@ -3,13 +3,18 @@
 @theme {
   --color-glass-bg: rgba(30, 41, 59, 0.6);
   --color-glass-border: rgba(51, 65, 85, 0.5);
+  --font-sora: "Sora", sans-serif;
 }
 
 body {
-  background-color: #020617; /* Slate 950 */
-  color: #f1f5f9; /* Slate 100 */
-  font-family: 'Inter', system-ui, sans-serif;
+  background-color: #030712; /* Deep slate */
+  color: #f1f5f9;
+  font-family: system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6, .font-sora {
+  font-family: var(--font-sora);
 }
 
 @layer utilities {
