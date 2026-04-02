@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useFinanceStore } from '../store/useFinanceStore';
-import { Plus, Search, X, Coffee, Home, ShoppingBag, Car, Film, Wallet, Briefcase, ChevronDown } from 'lucide-react';
+import { Plus, Search, Filter, X, Coffee, Home, ShoppingBag, Car, Film, Wallet, Briefcase, ChevronDown } from 'lucide-react';
 
 const categoryIcons = {
     food: <Coffee size={18} className="text-orange-400" />,
@@ -160,8 +160,6 @@ const TransactionsPage = () => {
     const transactions = useFinanceStore(state => state.transactions);
     const filters = useFinanceStore(state => state.filters);
     const setFilter = useFinanceStore(state => state.setFilter);
-    const role = useFinanceStore(state => state.role);
-    
     const [isLoading, setIsLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -301,21 +299,19 @@ const TransactionsPage = () => {
                 )}
             </div>
 
-            {/* Admin Floating Add Button */}
+            {/* Floating Add Button */}
             <AnimatePresence>
-                {role === 'admin' && (
-                    <motion.button
-                        initial={{ scale: 0, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0, opacity: 0 }}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => setIsModalOpen(true)}
-                        className="fixed bottom-6 right-6 md:absolute md:bottom-8 md:right-8 z-50 p-4 rounded-2xl bg-teal-500 text-slate-900 shadow-[0_10px_30px_rgba(20,184,166,0.3)] hover:shadow-[0_10px_30px_rgba(20,184,166,0.5)] transition-shadow"
-                    >
-                        <Plus size={24} strokeWidth={3} />
-                    </motion.button>
-                )}
+                <motion.button
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0, opacity: 0 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setIsModalOpen(true)}
+                    className="fixed bottom-24 right-6 md:fixed md:bottom-8 md:right-8 z-50 p-4 rounded-2xl bg-teal-500 text-slate-900 shadow-[0_10px_30px_rgba(20,184,166,0.3)] hover:shadow-[0_10px_30px_rgba(20,184,166,0.5)] transition-shadow"
+                >
+                    <Plus size={24} strokeWidth={3} />
+                </motion.button>
             </AnimatePresence>
 
             <AddTransactionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />

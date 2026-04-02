@@ -17,6 +17,30 @@ h1, h2, h3, h4, h5, h6, .font-sora {
   font-family: var(--font-sora);
 }
 
+/* Global Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #1e293b;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #334155;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1e293b transparent;
+}
+
 @layer utilities {
   .glass {
     background-color: var(--color-glass-bg);

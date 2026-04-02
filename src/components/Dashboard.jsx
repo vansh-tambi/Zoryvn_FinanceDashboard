@@ -24,10 +24,7 @@ const Dashboard = () => {
             <p className="text-sm text-slate-400">August – October 2025 Overview</p>
           </div>
         </div>
-        <div className="flex bg-[#1C2333]/80 p-1.5 rounded-full ring-1 ring-slate-700/50 backdrop-blur-md">
-           <button className="px-4 py-1.5 rounded-full text-sm font-medium bg-teal-600 shadow-lg shadow-teal-900/50 text-white">Overview</button>
-           <button className="px-4 py-1.5 rounded-full text-sm font-medium text-slate-400 hover:text-slate-100 transition-colors">Transactions</button>
-        </div>
+
       </motion.div>
       
       {/* Hero Insight Banner */}
