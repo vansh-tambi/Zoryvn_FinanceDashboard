@@ -91,7 +91,7 @@ const FinancialHealthScore = () => {
     const strokeDashoffset = circumference - (totalScore / 100) * circumference;
 
     return (
-        <div className="flex flex-col items-center bg-[#1A202C]/50 backdrop-blur-sm p-4 rounded-3xl border border-[#252D42] w-56 md:w-64 shadow-[0_10px_30px_rgba(0,0,0,0.3)]">
+        <div className="flex flex-col items-center bg-[#1A202C]/50 backdrop-blur-sm p-4 rounded-3xl border border-[#252D42] w-full max-w-[224px] md:max-w-[256px] mx-auto shadow-[0_10px_30px_rgba(0,0,0,0.3)]">
             <div className="relative flex items-center justify-center mb-5">
                 <svg width="90" height="90" className="transform -rotate-90 drop-shadow-[0_5px_15px_rgba(0,0,0,0.3)]">
                     <circle cx="45" cy="45" r={radius} fill="none" stroke="#252D42" strokeWidth="6" />

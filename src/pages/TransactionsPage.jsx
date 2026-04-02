@@ -148,7 +148,7 @@ const AddTransactionModal = ({ isOpen, onClose }) => {
 };
 
 const TransactionsPage = () => {
-    const { transactions, filters, setFilter } = useFinanceStore();
+    const { transactions, filters, setFilter, role } = useFinanceStore();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const shouldReduceMotion = useReducedMotion();
 
@@ -188,10 +188,10 @@ const TransactionsPage = () => {
                         <input type="text" value={filters.search} onChange={e => setFilter('search', e.target.value)} placeholder="Search transactions..." className="w-full bg-[#0D1117] border border-[#252D42] rounded-xl pl-12 pr-4 py-3.5 text-white placeholder:text-slate-500 focus:outline-none focus:border-teal-500 transition-colors font-medium" />
                     </div>
                     
-                    <div className="flex gap-4 overflow-x-auto pb-2 lg:pb-0 hide-scrollbar">
-                        <div className="relative shrink-0">
+                    <div className="flex flex-col sm:flex-row gap-4 pb-2 lg:pb-0">
+                        <div className="relative w-full sm:w-auto">
                             <Filter size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" />
-                            <select value={filters.category} onChange={e => setFilter('category', e.target.value)} className="bg-[#0D1117] border border-[#252D42] rounded-xl pl-10 pr-10 py-3.5 text-white focus:outline-none focus:border-teal-500 transition-colors appearance-none cursor-pointer font-medium min-w-[140px]">
+                            <select value={filters.category} onChange={e => setFilter('category', e.target.value)} className="w-full sm:w-auto bg-[#0D1117] border border-[#252D42] rounded-xl pl-10 pr-10 py-3.5 text-white focus:outline-none focus:border-teal-500 transition-colors appearance-none cursor-pointer font-medium min-w-[140px]">
                                 <option value="all">All Cats</option>
                                 <option value="food">Food</option>
                                 <option value="rent">Rent</option>
@@ -201,10 +201,10 @@ const TransactionsPage = () => {
                             <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500 text-xs">▼</div>
                         </div>
 
-                        <div className="flex bg-[#0D1117] p-1 rounded-xl border border-[#252D42] shrink-0">
-                            <motion.button whileTap={!shouldReduceMotion ? { scale: 0.97 } : {}} transition={{ type: "spring", stiffness: 400, damping: 17 }} onClick={() => setFilter('type', 'all')} className={`px-4 py-2 text-sm font-bold rounded-lg transition-all ${filters.type === 'all' ? 'bg-[#1C2333] text-white shadow' : 'text-slate-500 hover:text-slate-300'}`}>All</motion.button>
-                            <motion.button whileTap={!shouldReduceMotion ? { scale: 0.97 } : {}} transition={{ type: "spring", stiffness: 400, damping: 17 }} onClick={() => setFilter('type', 'income')} className={`px-4 py-2 text-sm font-bold rounded-lg transition-all ${filters.type === 'income' ? 'bg-teal-500/20 text-teal-400 shadow' : 'text-slate-500 hover:text-slate-300'}`}>In</motion.button>
-                            <motion.button whileTap={!shouldReduceMotion ? { scale: 0.97 } : {}} transition={{ type: "spring", stiffness: 400, damping: 17 }} onClick={() => setFilter('type', 'expense')} className={`px-4 py-2 text-sm font-bold rounded-lg transition-all ${filters.type === 'expense' ? 'bg-[#1C2333] text-white shadow' : 'text-slate-500 hover:text-slate-300'}`}>Out</motion.button>
+                        <div className="flex w-full sm:w-auto bg-[#0D1117] p-1 rounded-xl border border-[#252D42]">
+                            <motion.button whileTap={!shouldReduceMotion ? { scale: 0.97 } : {}} transition={{ type: "spring", stiffness: 400, damping: 17 }} onClick={() => setFilter('type', 'all')} className={`flex-1 sm:flex-none px-4 py-2 text-sm font-bold rounded-lg transition-all ${filters.type === 'all' ? 'bg-[#1C2333] text-white shadow' : 'text-slate-500 hover:text-slate-300'}`}>All</motion.button>
+                            <motion.button whileTap={!shouldReduceMotion ? { scale: 0.97 } : {}} transition={{ type: "spring", stiffness: 400, damping: 17 }} onClick={() => setFilter('type', 'income')} className={`flex-1 sm:flex-none px-4 py-2 text-sm font-bold rounded-lg transition-all ${filters.type === 'income' ? 'bg-teal-500/20 text-teal-400 shadow' : 'text-slate-500 hover:text-slate-300'}`}>In</motion.button>
+                            <motion.button whileTap={!shouldReduceMotion ? { scale: 0.97 } : {}} transition={{ type: "spring", stiffness: 400, damping: 17 }} onClick={() => setFilter('type', 'expense')} className={`flex-1 sm:flex-none px-4 py-2 text-sm font-bold rounded-lg transition-all ${filters.type === 'expense' ? 'bg-[#1C2333] text-white shadow' : 'text-slate-500 hover:text-slate-300'}`}>Out</motion.button>
                         </div>
                     </div>
                 </div>
@@ -289,7 +289,7 @@ const TransactionsPage = () => {
                 </div>
             </div>
 
-            {createPortal(
+            {role === 'admin' && createPortal(
                 <motion.button 
                     whileTap={!shouldReduceMotion ? { scale: 0.97 } : {}} transition={{ type: "spring", stiffness: 400, damping: 17 }}
                     onClick={() => setIsModalOpen(true)}

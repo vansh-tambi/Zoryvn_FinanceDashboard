@@ -1,27 +1,37 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { LayoutDashboard, ReceiptTextIcon } from 'lucide-react';
+import { LayoutDashboard, ReceiptTextIcon, Eye } from 'lucide-react';
 import SummaryCards from './SummaryCards';
 import TransactionList from './TransactionList';
 import BalanceAreaChart from './BalanceAreaChart';
 import CategoryPieChart from './CategoryPieChart';
 import HeroInsightBanner from './HeroInsightBanner';
+import { useFinanceStore } from '../store/useFinanceStore';
 
 const Dashboard = () => {
+  const role = useFinanceStore(state => state.role);
+  
   return (
     <div className="w-full flex flex-col gap-6 pb-12">
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-between mb-4 mt-2"
+        className="flex flex-col md:flex-row md:items-center justify-between mb-4 mt-2 gap-4"
       >
-        <div className="flex items-center gap-3">
-          <div className="bg-teal-600/20 p-2.5 rounded-xl text-teal-400 ring-1 ring-teal-500/30 shadow-[0_0_15px_rgba(20,184,166,0.2)]">
-            <LayoutDashboard size={24} />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold font-sora bg-clip-text text-transparent bg-gradient-to-r from-slate-100 to-slate-400">Finance Dashboard</h1>
-            <p className="text-sm text-slate-400">August – October 2025 Overview</p>
+        <div className="flex flex-col gap-2">
+          {role === 'viewer' && (
+            <div className="flex items-center gap-1.5 px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full text-blue-400 text-xs font-bold w-fit mb-1">
+              <Eye size={14} /> Viewing as Viewer
+            </div>
+          )}
+          <div className="flex items-center gap-3">
+            <div className="bg-teal-600/20 p-2.5 rounded-xl text-teal-400 ring-1 ring-teal-500/30 shadow-[0_0_15px_rgba(20,184,166,0.2)]">
+              <LayoutDashboard size={24} />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold font-sora bg-clip-text text-transparent bg-gradient-to-r from-slate-100 to-slate-400">Finance Dashboard</h1>
+              <p className="text-sm text-slate-400">August – October 2025 Overview</p>
+            </div>
           </div>
         </div>
 

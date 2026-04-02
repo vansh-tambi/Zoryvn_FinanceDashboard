@@ -57,11 +57,11 @@ const ActionableSuggestions = () => {
                            className={`bg-[#1C2333] border border-[#252D42] border-l-[4px] ${getBorderClass(item.priority)} rounded-2xl p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 group hover:bg-[#1C2333]/70 hover:brightness-105 transition-all shadow-lg`}
                            style={{ willChange: "transform, opacity" }}
                         >
-                           <div className="flex items-center gap-4 flex-1">
+                           <div className="flex items-center gap-4 flex-1 min-w-0">
                                <div className="w-10 h-10 rounded-full bg-[#0D1117] border border-[#252D42] flex items-center justify-center shrink-0">
                                    {getIconSrc(item.icon)}
                                </div>
-                               <p className="text-sm font-medium text-slate-300 leading-snug">{item.message}</p>
+                               <p className="text-sm font-medium text-slate-300 leading-snug break-words min-w-0">{item.message}</p>
                            </div>
                            
                            {item.saving > 0 && (

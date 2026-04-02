@@ -18,8 +18,20 @@ const CustomCursor = () => {
 
     // 'default' = bare page | 'content' = any card/text/row | 'interactive' = button/link | 'amount' = numbers
     const [state, setState] = useState('default');
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 768);
+        };
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    useEffect(() => {
+        if (isMobile) return;
+
         const onMouseMove = (e) => {
             mouse.current.x = e.clientX;
             mouse.current.y = e.clientY;
@@ -64,9 +76,9 @@ const CustomCursor = () => {
 
         return () => {
             window.removeEventListener('mousemove', onMouseMove);
-            cancelAnimationFrame(rafRef.current);
+            if (rafRef.current) cancelAnimationFrame(rafRef.current);
         };
-    }, []);
+    }, [isMobile]);
 
     // Ring size per state
     const ringSize = (state === 'interactive' || state === 'content') ? 50 : state === 'amount' ? 28 : 32;
@@ -88,6 +100,8 @@ const CustomCursor = () => {
     const ringGlow = (state === 'interactive' || state === 'content')
         ? '0 0 16px rgba(0,217,163,0.28), inset 0 0 8px rgba(0,217,163,0.07)'
         : 'none';
+
+    if (isMobile) return null;
 
     return (
         <>

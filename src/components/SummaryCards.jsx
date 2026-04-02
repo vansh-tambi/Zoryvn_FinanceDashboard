@@ -46,13 +46,7 @@ const SummaryCards = () => {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="mb-6"
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '1.6fr 1fr 1fr',
-        gridTemplateRows: 'auto auto',
-        gap: '1.25rem'
-      }}
+      className="mb-6 grid grid-cols-1 lg:grid-cols-[1.6fr_1fr_1fr] gap-5"
     >
       {/* Total Balance — spans both rows, left column */}
       <motion.div
@@ -60,8 +54,8 @@ const SummaryCards = () => {
         whileHover={!shouldReduceMotion ? { y: -4 } : {}}
         whileTap={!shouldReduceMotion ? { scale: 0.98 } : {}}
         transition={{ y: { duration: 0.2, ease: 'easeOut' }, scale: { type: 'spring', stiffness: 400, damping: 17 } }}
-        style={{ gridColumn: '1', gridRow: '1 / 3', willChange: 'transform' }}
-        className="bg-[#1C2333] border border-teal-500/25 shadow-[0_0_30px_rgba(20,184,166,0.08)] rounded-[24px] p-7 flex flex-col justify-between relative overflow-hidden cursor-pointer group"
+        style={{ willChange: 'transform' }}
+        className="lg:row-span-2 bg-[#1C2333] border border-teal-500/25 shadow-[0_0_30px_rgba(20,184,166,0.08)] rounded-[24px] p-7 flex flex-col justify-between relative overflow-hidden cursor-pointer group"
       >
         <div className="flex justify-between items-start mb-6">
           <div className="p-3 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-400">
@@ -97,7 +91,7 @@ const SummaryCards = () => {
         whileHover={!shouldReduceMotion ? { y: -4, borderColor: 'rgba(20,184,166,0.18)' } : {}}
         whileTap={!shouldReduceMotion ? { scale: 0.98 } : {}}
         transition={{ y: { duration: 0.2, ease: 'easeOut' }, scale: { type: 'spring', stiffness: 400, damping: 17 } }}
-        style={{ gridColumn: '2', gridRow: '1', willChange: 'transform' }}
+        style={{ willChange: 'transform' }}
         className="bg-[#1C2333] border border-[#1e3a5f] rounded-[20px] p-5 flex flex-col justify-between relative overflow-hidden cursor-pointer"
       >
         <div className="flex justify-between items-center mb-3">
@@ -120,7 +114,7 @@ const SummaryCards = () => {
         whileHover={!shouldReduceMotion ? { y: -4, borderColor: 'rgba(239,68,68,0.18)' } : {}}
         whileTap={!shouldReduceMotion ? { scale: 0.98 } : {}}
         transition={{ y: { duration: 0.2, ease: 'easeOut' }, scale: { type: 'spring', stiffness: 400, damping: 17 } }}
-        style={{ gridColumn: '3', gridRow: '1', willChange: 'transform' }}
+        style={{ willChange: 'transform' }}
         className="bg-[#1C2333] border border-[#1e3a5f] rounded-[20px] p-5 flex flex-col justify-between relative overflow-hidden cursor-pointer"
       >
         <div className="flex justify-between items-center mb-3">
@@ -143,8 +137,8 @@ const SummaryCards = () => {
         whileHover={!shouldReduceMotion ? { y: -4, borderColor: 'rgba(168,85,247,0.18)' } : {}}
         whileTap={!shouldReduceMotion ? { scale: 0.98 } : {}}
         transition={{ y: { duration: 0.2, ease: 'easeOut' }, scale: { type: 'spring', stiffness: 400, damping: 17 } }}
-        style={{ gridColumn: '2 / 4', gridRow: '2', willChange: 'transform' }}
-        className="bg-[#1C2333] border border-[#1e3a5f] rounded-[20px] p-5 flex items-center gap-6 relative overflow-hidden cursor-pointer"
+        style={{ willChange: 'transform' }}
+        className="lg:col-span-2 bg-[#1C2333] border border-[#1e3a5f] rounded-[20px] p-5 flex items-center gap-6 relative overflow-hidden cursor-pointer"
       >
         <div className="p-3 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 shrink-0">
           <PiggyBank size={20} />
