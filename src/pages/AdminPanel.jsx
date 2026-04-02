@@ -130,7 +130,7 @@ const TransactionModal = ({ isOpen, onClose, initialData = null }) => {
 
 const AdminPanel = () => {
     const navigate = useNavigate();
-    const { role, transactions, deleteTransaction, deleteMultipleTransactions, editMultipleTransactions } = useFinanceStore();
+    const { role, setRole, transactions, deleteTransaction, deleteMultipleTransactions, editMultipleTransactions } = useFinanceStore();
 
     useEffect(() => {
         if (role !== 'admin') {
