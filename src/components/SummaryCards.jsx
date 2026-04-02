@@ -71,11 +71,11 @@ const SummaryCards = () => {
         </div>
 
         <div>
-          <p className="text-sm font-semibold text-slate-400 mb-2">Total Balance</p>
+          <p className="text-sm font-semibold text-slate-400 mb-2">Your net position</p>
           <h2 className="font-bold font-sora text-white tracking-wide leading-none mb-1" style={{ fontSize: '28px' }}>
             <AnimatedCounter value={balance} />
           </h2>
-          <p className="text-xs text-slate-500 mt-2">Income minus all outflows</p>
+          <p className="text-xs text-slate-500 mt-2">All income minus everything spent</p>
         </div>
 
         {/* Decorative glow blob */}
@@ -107,7 +107,7 @@ const SummaryCards = () => {
           <span className="text-[10px] font-bold text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-full">IN</span>
         </div>
         <div>
-          <p className="text-xs font-semibold text-slate-500 mb-1">Total Income</p>
+          <p className="text-xs font-semibold text-slate-500 mb-1">Money in</p>
           <h2 className="text-[22px] font-bold font-sora text-teal-400 tracking-wide leading-none">
             <AnimatedCounter value={income} />
           </h2>
@@ -130,7 +130,7 @@ const SummaryCards = () => {
           <span className="text-[10px] font-bold text-red-400 bg-red-500/10 px-2 py-0.5 rounded-full">OUT</span>
         </div>
         <div>
-          <p className="text-xs font-semibold text-slate-500 mb-1">Total Expenses</p>
+          <p className="text-xs font-semibold text-slate-500 mb-1">Money out</p>
           <h2 className="text-[22px] font-bold font-sora text-red-400 tracking-wide leading-none">
             <AnimatedCounter value={expense} />
           </h2>
@@ -150,7 +150,7 @@ const SummaryCards = () => {
           <PiggyBank size={20} />
         </div>
         <div className="flex flex-col flex-1 min-w-0">
-          <p className="text-xs font-semibold text-slate-500 mb-1">Savings Rate</p>
+          <p className="text-xs font-semibold text-slate-500 mb-1">How much you're keeping</p>
           <h2 className="text-[22px] font-bold font-sora text-purple-400 tracking-wide leading-none">
             <AnimatedCounter value={savingsRate} prefix="" /><span className="text-lg">%</span>
           </h2>

@@ -73,7 +73,7 @@ const AddTransactionModal = ({ isOpen, onClose }) => {
                         className="bg-[#1C2333] border border-[#252D42] rounded-t-3xl md:rounded-[24px] w-full max-w-md overflow-hidden shadow-2xl relative flex flex-col"
                     >
                         <div className="px-6 py-4 border-b border-[#252D42] flex justify-between items-center bg-[#0D1117]/50">
-                            <h2 className="text-xl font-bold font-sora text-white">New Record</h2>
+                            <h2 className="text-xl font-bold font-sora text-white">Record a transaction</h2>
                             <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors p-2 rounded-full hover:bg-[#252D42]">
                                 ✕
                             </button>
@@ -136,7 +136,7 @@ const AddTransactionModal = ({ isOpen, onClose }) => {
                                 className="w-full py-4 rounded-xl bg-teal-500 text-[#030712] font-bold font-sora shadow-[0_5px_20px_rgba(20,184,166,0.2)] hover:shadow-[0_0_12px_rgba(0,217,163,0.25)] hover:brightness-110 transition-all mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                 style={{ willChange: 'transform' }}
                             >
-                                Add Transaction
+                                Add and it's logged.
                             </motion.button>
                         </form>
                     </motion.div>
@@ -177,7 +177,7 @@ const TransactionsPage = () => {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-bold font-sora text-white mb-2 tracking-tight">Ledger</h1>
-                    <p className="text-slate-400">Search, filter, and modify your transaction history.</p>
+                    <p className="text-slate-400">Every rupee in, every rupee out — all in one place.</p>
                 </div>
             </div>
 
@@ -236,7 +236,7 @@ const TransactionsPage = () => {
                                        onClick={() => { setFilter('search', ''); setFilter('category', 'all'); setFilter('type', 'all'); }} 
                                        className="px-6 py-2.5 rounded-full border border-[#252D42] text-slate-400 hover:text-white hover:bg-[#252D42] transition-colors mt-2 text-sm font-semibold shadow-lg"
                                     >
-                                       Clear all filters
+                                       Reset filters
                                     </motion.button>
                                 </div>
                             )

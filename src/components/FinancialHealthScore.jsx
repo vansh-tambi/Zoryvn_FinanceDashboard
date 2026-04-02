@@ -111,14 +111,14 @@ const FinancialHealthScore = () => {
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                     <AnimatedHealthScore value={totalScore} colorClass={colorClass} />
-                    <span className="text-[9px] uppercase tracking-widest text-slate-400 mt-1">Health</span>
+                    <span className="text-[9px] uppercase tracking-widest text-slate-400 mt-1">/ 100</span>
                 </div>
             </div>
 
             <div className="w-full flex flex-col gap-3.5 px-1">
-                <Tooltip content="Savings Rate tracked (Threshold capped at 50%)">
+                <Tooltip content="How much you're actually putting away. Higher savings rate = higher score, capped at 50%.">
                     <div className="flex items-center gap-3">
-                        <span className="text-[10px] uppercase font-bold text-slate-400 w-[65px] leading-none text-right">Savings</span>
+                        <span className="text-[10px] uppercase font-bold text-slate-400 w-[65px] leading-none text-right">Saving</span>
                         <div className="flex-1 h-1.5 bg-[#0D1117] rounded-full overflow-hidden border border-[#252D42]/50">
                             <motion.div 
                                initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }}
@@ -129,7 +129,7 @@ const FinancialHealthScore = () => {
                     </div>
                 </Tooltip>
                 
-                <Tooltip content="Checks Standard Deviation of expenses. High variance impacts score.">
+                <Tooltip content="Are you spending the same each month, or all over the place? Wild swings hurt this score.">
                     <div className="flex items-center gap-3">
                         <span className="text-[10px] uppercase font-bold text-slate-400 w-[65px] leading-none text-right tracking-tight">Consistency</span>
                         <div className="flex-1 h-1.5 bg-[#0D1117] rounded-full overflow-hidden border border-[#252D42]/50">
@@ -142,7 +142,7 @@ const FinancialHealthScore = () => {
                     </div>
                 </Tooltip>
 
-                <Tooltip content="Scores diversity. Penalizes strongly if one category dominates >60%.">
+                <Tooltip content="If one category swallows more than 60% of your spend, this drops. Diversify a bit.">
                     <div className="flex items-center gap-3">
                         <span className="text-[10px] uppercase font-bold text-slate-400 w-[65px] leading-none text-right">Balance</span>
                         <div className="flex-1 h-1.5 bg-[#0D1117] rounded-full overflow-hidden border border-[#252D42]/50">

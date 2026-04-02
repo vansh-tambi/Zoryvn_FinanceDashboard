@@ -4,28 +4,73 @@ import { useFinanceStore } from '../store/useFinanceStore';
 import { getMonthlyComparison } from '../utils/derive';
 import { motion, useReducedMotion } from 'framer-motion';
 
-const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-        const { income, expense } = payload[0].payload;
-        return (
-            <div className="bg-[#0D1117] border border-[#252D42] rounded-xl p-4 shadow-xl">
-                <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2">{label}</p>
-                <div className="flex flex-col gap-1">
-                     <p className="text-teal-400 font-bold font-sora">In: ₹{income.toLocaleString('en-IN')}</p>
-                     <p className="text-coral-400 font-bold font-sora text-[#ef4444]">Out: ₹{expense.toLocaleString('en-IN')}</p>
-                     <div className="w-full h-[1px] bg-[#252D42] my-1" />
-                     <p className="text-white font-bold font-sora">Bal: ₹{(income - expense).toLocaleString('en-IN')}</p>
+const tooltipBase = {
+    background: '#0d1f3c',
+    border: '1px solid #1e3a5f',
+    borderRadius: '10px',
+    padding: '10px 14px',
+    boxShadow: '0 4px 20px #00000060',
+    fontFamily: '"DM Mono", monospace',
+};
+
+const AreaTooltip = ({ active, payload, label }) => {
+    if (!active || !payload || !payload.length) return null;
+    const current = payload[0].payload;
+    const balance = current.income - current.expense;
+    const prevBalance = current.prevBalance ?? null;
+    const delta = prevBalance !== null ? balance - prevBalance : null;
+    const deltaPositive = delta >= 0;
+
+    return (
+        <div style={tooltipBase}>
+            <p style={{
+                fontSize: '10px',
+                letterSpacing: '1.2px',
+                textTransform: 'uppercase',
+                color: '#4a7fa5',
+                marginBottom: '8px',
+                fontVariantNumeric: 'tabular-nums',
+            }}>
+                {label}
+            </p>
+            <p style={{ fontSize: '18px', color: '#00D9A3', fontWeight: '600', lineHeight: 1, marginBottom: '4px' }}>
+                ₹{balance.toLocaleString('en-IN')}
+            </p>
+            <div style={{ height: '1px', background: '#1e3a5f', margin: '8px 0' }} />
+            <div style={{ display: 'flex', gap: '16px' }}>
+                <div>
+                    <p style={{ fontSize: '9px', color: '#4a7fa5', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '2px' }}>In</p>
+                    <p style={{ fontSize: '13px', color: '#00D9A3', fontWeight: '500' }}>₹{current.income.toLocaleString('en-IN')}</p>
+                </div>
+                <div>
+                    <p style={{ fontSize: '9px', color: '#4a7fa5', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '2px' }}>Out</p>
+                    <p style={{ fontSize: '13px', color: '#ef4444', fontWeight: '500' }}>₹{current.expense.toLocaleString('en-IN')}</p>
                 </div>
             </div>
-        );
-    }
-    return null;
+            {delta !== null && (
+                <p style={{
+                    fontSize: '11px',
+                    color: deltaPositive ? '#22c55e' : '#ef4444',
+                    marginTop: '8px',
+                    fontWeight: '500',
+                }}>
+                    {deltaPositive ? '↑' : '↓'} ₹{Math.abs(delta).toLocaleString('en-IN')} from last period
+                </p>
+            )}
+        </div>
+    );
 };
 
 const BalanceAreaChart = () => {
     const transactions = useFinanceStore(state => state.transactions);
     const shouldReduceMotion = useReducedMotion();
-    const data = useMemo(() => getMonthlyComparison(transactions), [transactions]);
+    const rawData = useMemo(() => getMonthlyComparison(transactions), [transactions]);
+
+    // Attach prevBalance for delta calculation
+    const data = useMemo(() => rawData.map((d, i) => ({
+        ...d,
+        prevBalance: i > 0 ? rawData[i - 1].income - rawData[i - 1].expense : null,
+    })), [rawData]);
 
     return (
         <motion.div 
@@ -65,7 +110,11 @@ const BalanceAreaChart = () => {
                             dx={-10}
                             tickFormatter={(val) => `₹${val>=1000 ? val/1000 + 'k' : val}`}
                         />
-                        <RechartsTooltip content={<CustomTooltip />} cursor={{ stroke: '#334155', strokeWidth: 1, strokeDasharray: '4 4' }} />
+                        <RechartsTooltip
+                            content={<AreaTooltip />}
+                            cursor={{ stroke: '#1e3a5f', strokeWidth: 1, strokeDasharray: '4 4' }}
+                            wrapperStyle={{ outline: 'none' }}
+                        />
                         <Area 
                             type="monotone" 
                             dataKey="balance" 

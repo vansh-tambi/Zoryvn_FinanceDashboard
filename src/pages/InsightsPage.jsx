@@ -15,24 +15,51 @@ const COLORS = {
   subscription: '#22c55e'
 };
 
-const CustomTooltip = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
+const tooltipBase = {
+    background: '#0d1f3c',
+    border: '1px solid #1e3a5f',
+    borderRadius: '10px',
+    padding: '10px 14px',
+    boxShadow: '0 4px 20px #00000060',
+    fontFamily: '"DM Mono", monospace',
+    minWidth: '180px',
+};
+
+const BarTooltip = ({ active, payload, label }) => {
+    if (!active || !payload || !payload.length) return null;
+    const filtered = payload.filter(p => p.value > 0);
+    if (!filtered.length) return null;
+
     return (
-      <div className="bg-[#0D1117] border border-[#252D42] rounded-xl p-4 shadow-xl">
-        <p className="text-slate-400 text-xs font-semibold tracking-wider mb-2">{label}</p>
-        <div className="flex flex-col gap-1.5">
-          {payload.map((entry, index) => (
-             <div key={index} className="flex items-center gap-2">
-                 <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
-                 <span className="text-slate-300 capitalize text-sm">{entry.name}:</span>
-                 <span className="text-white font-bold font-sora text-sm ml-auto">₹{entry.value.toLocaleString()}</span>
-             </div>
-          ))}
+        <div style={tooltipBase}>
+            <p style={{
+                fontSize: '10px',
+                letterSpacing: '1.4px',
+                textTransform: 'uppercase',
+                color: '#4a7fa5',
+                marginBottom: '10px',
+                fontVariantNumeric: 'tabular-nums',
+            }}>
+                {label}
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {filtered.map((entry, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: entry.color, flexShrink: 0 }} />
+                        <span style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'capitalize', flex: 1 }}>{entry.name}</span>
+                        <span style={{ fontSize: '12px', color: '#f1f5f9', fontWeight: '600', fontVariantNumeric: 'tabular-nums' }}>₹{entry.value.toLocaleString('en-IN')}</span>
+                    </div>
+                ))}
+            </div>
+            <div style={{ height: '1px', background: '#1e3a5f', margin: '10px 0 6px' }} />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '10px', color: '#4a7fa5' }}>Total</span>
+                <span style={{ fontSize: '13px', color: '#00D9A3', fontWeight: '600', fontVariantNumeric: 'tabular-nums' }}>
+                    ₹{filtered.reduce((sum, e) => sum + e.value, 0).toLocaleString('en-IN')}
+                </span>
+            </div>
         </div>
-      </div>
     );
-  }
-  return null;
 };
 
 const MonthlyBarChart = ({ data }) => {
@@ -52,7 +79,7 @@ const MonthlyBarChart = ({ data }) => {
                         <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.3} vertical={false} />
                         <XAxis dataKey="month" stroke="#94a3b8" axisLine={false} tickLine={false} tick={{fontSize: 12}} dy={10} />
                         <YAxis stroke="#94a3b8" axisLine={false} tickLine={false} tick={{fontSize: 12}} dx={-10} tickFormatter={(val) => val >= 1000 ? `${val/1000}k` : val} />
-                        <RechartsTooltip content={<CustomTooltip />} cursor={{ fill: '#334155', opacity: 0.1 }} />
+                        <RechartsTooltip content={<BarTooltip />} cursor={{ fill: '#1e3a5f', opacity: 0.15 }} wrapperStyle={{ outline: 'none' }} />
                         <Legend iconType="circle" wrapperStyle={{ paddingTop: '20px', fontSize: '12px', color: '#94a3b8' }} />
                         {Object.keys(COLORS).map((cat) => (
                            <Bar key={cat} dataKey={cat} stackId="a" fill={COLORS[cat]} radius={[0, 0, 0, 0]} animationDuration={1000} />
@@ -89,7 +116,7 @@ const SuspiciousPatterns = ({ patterns }) => {
     return (
        <div className="bg-[#1C2333] border border-[#252D42] rounded-[24px] p-6 flex flex-col h-full shadow-lg">
            <h3 className="text-xl font-bold font-sora text-white mb-6 flex items-center gap-2">
-               <Flame size={20} className="text-orange-500" /> Activity Alerts
+               <Flame size={20} className="text-orange-500" /> Things that caught our eye
            </h3>
            <motion.div initial="hidden" whileInView="visible" viewport={{once: true}} variants={containerVariants} className="flex flex-col gap-4 flex-1">
                {patterns.map((p, i) => (
@@ -145,7 +172,7 @@ const CategoryRanking = ({ totals }) => {
 
     return (
         <div className="bg-[#1C2333] border border-[#252D42] rounded-[24px] p-6 shadow-lg h-full">
-             <h3 className="text-xl font-bold font-sora text-white mb-6">Top Outflows</h3>
+             <h3 className="text-xl font-bold font-sora text-white mb-6">Where your money actually goes</h3>
              <div className="flex flex-col gap-5">
                  {expenses.slice(0, 5).map((cat, i) => (
                      <div key={cat.category} className="flex flex-col gap-2">
@@ -182,8 +209,8 @@ const InsightsPage = () => {
                 <div className="w-32 h-32 bg-teal-500/10 rounded-full flex items-center justify-center mb-6">
                     <CheckCircle size={48} className="text-teal-500" />
                 </div>
-                <h2 className="text-3xl font-bold font-sora text-white mb-2">100% Savings</h2>
-                <p className="text-slate-400 max-w-md">You've logged income, but no expenses tracked yet! Your insights will generate once outbound cash flows begin.</p>
+                <h2 className="text-3xl font-bold font-sora text-white mb-2">All income, zero expenses</h2>
+                <p className="text-slate-400 max-w-md">Technically perfect — but start tracking outflows and we'll show you where things actually go.</p>
             </div>
         );
     }
@@ -196,8 +223,8 @@ const InsightsPage = () => {
     return (
         <div className="flex flex-col gap-8 pb-10">
             <div>
-                <h1 className="text-3xl font-bold font-sora text-white mb-2 tracking-tight">Intelligence</h1>
-                <p className="text-slate-400">Predictive analytics and historical spending patterns.</p>
+                <h1 className="text-3xl font-bold font-sora text-white mb-2 tracking-tight">What your money's saying</h1>
+                <p className="text-slate-400">Patterns, predictions, and a few things worth knowing.</p>
             </div>
 
             <div className="flex flex-col gap-6">

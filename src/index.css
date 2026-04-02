@@ -7,13 +7,24 @@
   --font-mono: "DM Mono", monospace;
 }
 
+/* Force custom cursor on EVERY element — no exceptions */
+*, *::before, *::after {
+  cursor: none !important;
+}
+
 /* ─── Global Reset ─────────────────────────────────── */
 body {
   background-color: #030712;
   color: #f1f5f9;
   font-family: "Sora", sans-serif;
   -webkit-font-smoothing: antialiased;
-  cursor: none; /* Custom cursor takes over */
+  scrollbar-width: none;         /* Firefox */
+  -ms-overflow-style: none;      /* IE/Edge */
+}
+
+/* Hide webkit scrollbar — scrolling still works */
+::-webkit-scrollbar {
+  display: none;
 }
 
 /* ─── Typography System ─────────────────────────────── */
@@ -44,30 +55,6 @@ h1, h2, h3, h4, h5, h6, .font-sora {
   font-family: "DM Mono", monospace;
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum";
-}
-
-/* ─── Global Custom Scrollbar ───────────────────────── */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #1e293b;
-  border-radius: 9999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: #334155;
-}
-
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #1e293b transparent;
 }
 
 /* ─── Utilities ─────────────────────────────────────── */

@@ -31,7 +31,7 @@ export const useFinanceStore = create(
       addTransaction: (transaction) =>
         set((state) => ({
           transactions: [transaction, ...state.transactions],
-          toast: { message: 'Transaction added successfully!', type: 'success', id: Date.now() }
+          toast: { message: 'Got it — transaction saved.', type: 'success', id: Date.now() }
         })),
         
       editTransaction: (id, updatedDetails) =>
