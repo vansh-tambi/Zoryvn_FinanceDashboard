@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, Receipt, LineChart, Shield } from 'lucide-react';
 import StreakCard from './StreakCard';
-import StorageStatusBadge from './StorageStatusBadge';
+
 import { motion, useReducedMotion } from 'framer-motion';
 
 const NavItem = ({ item }) => {
@@ -63,7 +63,6 @@ const Sidebar = () => {
         </nav>
 
         <div className="px-3 pb-4"><StreakCard /></div>
-        <div className="p-3 border-t border-[#1C2333]"><StorageStatusBadge /></div>
       </div>
 
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0D1117]/95 backdrop-blur-md border-t border-[#1C2333] px-2 flex justify-around items-center h-[72px] pb-safe">

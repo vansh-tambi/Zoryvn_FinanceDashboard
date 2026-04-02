@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useFinanceStore } from '../store/useFinanceStore';
 import { Plus, Search, Filter, Receipt, LayoutTemplate } from 'lucide-react';
@@ -38,7 +39,7 @@ const AddTransactionModal = ({ isOpen, onClose }) => {
         onClose();
     };
 
-    return (
+    const modalContent = (
         <AnimatePresence>
             {isOpen && (
                 <motion.div 
@@ -130,6 +131,7 @@ const AddTransactionModal = ({ isOpen, onClose }) => {
             )}
         </AnimatePresence>
     );
+    return createPortal(modalContent, document.body);
 };
 
 const TransactionsPage = () => {
@@ -274,13 +276,16 @@ const TransactionsPage = () => {
                 </div>
             </div>
 
-            <motion.button 
-                whileTap={!shouldReduceMotion ? { scale: 0.97 } : {}} transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                onClick={() => setIsModalOpen(true)}
-                className="fixed bottom-24 md:bottom-8 right-6 md:right-8 w-14 h-14 bg-teal-500 rounded-full flex items-center justify-center text-[#030712] shadow-[0_10px_30px_rgba(20,184,166,0.4)] hover:shadow-[0_0_20px_rgba(0,217,163,0.3)] hover:brightness-110 transition-all z-40 group"
-            >
-                <Plus size={24} className="group-hover:rotate-90 transition-transform duration-300" />
-            </motion.button>
+            {createPortal(
+                <motion.button 
+                    whileTap={!shouldReduceMotion ? { scale: 0.97 } : {}} transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                    onClick={() => setIsModalOpen(true)}
+                    className="fixed bottom-24 md:bottom-8 right-6 md:right-8 w-14 h-14 bg-teal-500 rounded-full flex items-center justify-center text-[#030712] shadow-[0_10px_30px_rgba(20,184,166,0.4)] hover:shadow-[0_0_20px_rgba(0,217,163,0.3)] hover:brightness-110 transition-all z-[100] group"
+                >
+                    <Plus size={24} className="group-hover:rotate-90 transition-transform duration-300" />
+                </motion.button>,
+                document.body
+            )}
 
             <AddTransactionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </div>
