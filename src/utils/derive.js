@@ -163,3 +163,19 @@ export function getMonthlyComparison(transactions) {
     };
   });
 }
+
+export function getMonthlyCategoryComparison(transactions) {
+  const months = [...new Set(transactions.map(t => t.date.substring(0, 7)))].sort().reverse();
+  const last3 = months.slice(0, 3).reverse();
+  return last3.map(m => {
+     const txns = transactions.filter(t => t.date.startsWith(m) && t.type === 'expense');
+     const cats = {};
+     txns.forEach(t => cats[t.category] = (cats[t.category] || 0) + t.amount);
+     
+     const dateObj = new Date(`${m}-01T12:00:00Z`);
+     return {
+        month: dateObj.toLocaleDateString('en-US', { month: 'short' }),
+        ...cats
+     };
+  });
+}

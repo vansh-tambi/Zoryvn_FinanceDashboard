@@ -3,11 +3,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import '@fontsource/sora';
 import AppLayout from './components/AppLayout';
 import Dashboard from './components/Dashboard'; 
+import TransactionsPage from './pages/TransactionsPage';
+import InsightsPage from './pages/InsightsPage';
 import './index.css';
-
-// Placeholder Pages for demonstration
-const TransactionsPage = () => <div className="font-sora text-2xl font-bold">Transactions Module</div>;
-const InsightsPage = () => <div className="font-sora text-2xl font-bold">Insights Engine</div>;
 
 function App() {
   return (
